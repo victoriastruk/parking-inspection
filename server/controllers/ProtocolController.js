@@ -27,7 +27,7 @@ module.exports.getAllProtocols = async (req, res, next) => {
       ...pagination,
     });
 
-    if (!protocols.lenght) {
+    if (!protocols.length) {
       return next(createHttpError(404, "Protocols not found"));
     }
 
@@ -41,7 +41,7 @@ module.exports.getAllProtocolsByOfficerID = async (req, res, next) => {
   try {
     const {
       params: { officerId },
-      pagination
+      pagination,
     } = req;
     const protocols = await Protocol.findAll({
       where: {
@@ -60,10 +60,10 @@ module.exports.getAllProtocolsByOfficerID = async (req, res, next) => {
         },
       ],
       order: [["updated_at", "DESC"]],
-      ...pagination
+      ...pagination,
     });
 
-    if (!protocols.lenght) {
+    if (!protocols.length) {
       return next(createHttpError(404, "Protocols not found"));
     }
     return res.status(200).send({ data: protocols });
@@ -74,14 +74,18 @@ module.exports.getAllProtocolsByOfficerID = async (req, res, next) => {
 
 module.exports.createProtocol = async (req, res, next) => {
   try {
-    const { body, files } = req;
-    const createdProtocol = await Protocol.create(body);
+    const {
+      params: { officerId },
+      body,
+      files,
+    } = req;
+    const createdProtocol = await Protocol.create({ ...body, officerId });
 
     if (!createdProtocol) {
       return next(createHttpError(400, "Protocol not created"));
     }
 
-    if (files?.lenght) {
+    if (files?.length) {
       const images = files.map((file) => ({
         path: file.filename,
         protocolId: createdProtocol.id,
@@ -127,7 +131,7 @@ module.exports.updateProtocolByID = async (req, res, next) => {
       returning: true,
     });
 
-    if (files?.lenght) {
+    if (files?.length) {
       const images = files.map((file) => ({
         path: file.filename,
         protocolId: updatedProtocol.id,
