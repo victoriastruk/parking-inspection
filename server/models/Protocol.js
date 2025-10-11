@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       serviceNotes: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         validate: {
           notNull: true,
           notEmpty: true,
@@ -25,6 +25,22 @@ module.exports = (sequelize, DataTypes) => {
       fineAmount: {
         type: DataTypes.DOUBLE,
         allowNull: false,
+        validate: {
+          notNull: true,
+          notEmpty: true,
+        },
+      },
+      violatorFullName: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        validate: {
+          notNull: true,
+          notEmpty: true,
+        },
+      },
+      violatorPassportNumber: {
+        allowNull: false,
+        type: DataTypes.STRING,
         validate: {
           notNull: true,
           notEmpty: true,

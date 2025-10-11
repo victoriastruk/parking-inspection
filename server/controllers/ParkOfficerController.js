@@ -25,7 +25,7 @@ module.exports.getParkOfficerByID = async (req, res, next) => {
     const parkOfficer = await ParkOfficer.findAll({
       where: { id },
     });
-  
+
     if (!parkOfficer) {
       return next(createHttpError(404, "Park officer not found"));
     }
@@ -86,6 +86,32 @@ module.exports.deleteParkOfficerByID = async (req, res, next) => {
     }
 
     return res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.dismissParkOfficerByID = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+
+    const [count, [updatedParkOfficer]] = await ParkOfficer.update(
+      {
+        isWorked: false,
+      },
+      {
+        where: { id },
+        returning: true,
+      }
+    );
+
+    if (count === 0) {
+      return next(createHttpError(404, "Park officer not found"));
+    }
+
+    return res.status(200).send({ data: updatedParkOfficer });
   } catch (error) {
     next(error);
   }
