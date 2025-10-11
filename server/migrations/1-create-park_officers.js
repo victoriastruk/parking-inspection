@@ -19,6 +19,7 @@ module.exports = {
         field: "badge_number",
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       district: {
         type: Sequelize.STRING,
@@ -35,7 +36,7 @@ module.exports = {
         type: Sequelize.DATE,
         field: "created_at",
       },
-      updateAt: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
         field: "updated_at",
