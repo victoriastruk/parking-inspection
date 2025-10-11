@@ -1,16 +1,20 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class ParkOfficer extends Model {
-    static associate({ Protocol }) {
-      ParkOfficer.hasMany(Protocol, {
+  class Protocol extends Model {
+    static associate({ ParkOfficer, Image }) {
+      Protocol.belongsTo(ParkOfficer, {
         foreignKey: "officerId",
+      });
+
+      Protocol.hasMany(Image, {
+        foreignKey: "protocolId",
       });
     }
   }
-  ParkOfficer.init(
+  Protocol.init(
     {
-      fullName: {
+      serviceNotes: {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
@@ -18,16 +22,8 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      badgeNumber: {
-        allowNull: false,
-        type: DataTypes.STRING,
-        validate: {
-          notNull: true,
-          notEmpty: true,
-        },
-      },
-      district: {
-        type: DataTypes.STRING,
+      fineAmount: {
+        type: DataTypes.DOUBLE,
         allowNull: false,
         validate: {
           notNull: true,
@@ -37,10 +33,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ParkPfficer",
-      tableName: "park_officers",
+      modelName: "Protocol",
+      tableName: "protocols",
       underscored: true,
     }
   );
-  return ParkOfficer;
+  return Protocol;
 };
