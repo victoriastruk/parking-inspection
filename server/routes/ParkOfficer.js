@@ -21,9 +21,7 @@ parkOfficerRouter
 parkOfficerRouter.use("/:officerId/protocols", protocolRouter);
 
 parkOfficerRouter.use(
-  "/protocols/:protocolId/images",
-  imageRouter,
-  imageRouter
+  "/protocols/:protocolId/images", imageRouter
 );
 
 module.exports = parkOfficerRouter;

@@ -36,7 +36,7 @@ module.exports.getParkOfficerByID = async (req, res, next) => {
   }
 };
 
-module.exports.createParkOfficer = async (req, req, next) => {
+module.exports.createParkOfficer = async (req, res, next) => {
   try {
     const { body } = req;
     const createdParkOfficer = await ParkOfficer.create(body);

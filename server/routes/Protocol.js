@@ -15,4 +15,4 @@ protocolRouter
   .put(uploadImages, ProtocolController.updateProtocolByID)
   .delete(ProtocolController.deleteProtocolByID);
 
-module.export = protocolRouter();
+module.exports = protocolRouter;
