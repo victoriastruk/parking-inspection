@@ -38,6 +38,17 @@ const dismissParkOfficer = createAsyncThunk(
     }
   }
 );
+
+const addParkOfficer = createAsyncThunk(
+  `${SLICE_NAME}/addParkOfficer`,
+  async (parkOfficer, thunkAPI) => {
+    try {
+      await API.addParkOfficer(parkOfficer);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 const initialState = {
   parkOfficers: [],
   isLoading: false,
@@ -85,11 +96,28 @@ const parkOfficerSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     });
+    builder.addCase(addParkOfficer.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(addParkOfficer.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+    });
+    builder.addCase(addParkOfficer.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
   },
 });
 
 const { reducer } = parkOfficerSlice;
 
-export { getParkOfficers, deleteParkOfficer, dismissParkOfficer };
+export {
+  getParkOfficers,
+  deleteParkOfficer,
+  dismissParkOfficer,
+  addParkOfficer,
+};
 
 export default reducer;

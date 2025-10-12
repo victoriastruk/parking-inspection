@@ -24,7 +24,7 @@ const DeleteConfirmation = ({
     <Modal
       isOpen={open}
       onRequestClose={() => setIsOpen(false)}
-      styles={customStyles}
+      style={customStyles}
     >
       <h2>Delete park officer</h2>
       <p>Are u sure want to delete {officerFullName}?</p>
