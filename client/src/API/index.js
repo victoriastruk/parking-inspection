@@ -16,10 +16,19 @@ export const dismissParkOfficer = async (parkOfficerID) =>
 export const addParkOfficer = async (parkOfficer) =>
   await httpClient.post("/parkOfficers", parkOfficer);
 
-export const updateParkOfficer = async (parkOfficerID, updatedData) => {
+export const updateParkOfficer = async (parkOfficerID, updatedData) =>
   await httpClient.put(`/parkOfficers/${parkOfficerID}`, updatedData);
-};
 
-export const getAllProtocols = async () => {
- return await httpClient.get("/parkOfficers/protocols");
-};
+export const getAllProtocols = async () =>
+  await httpClient.get("/parkOfficers/protocols");
+
+export const deleteProtocolByID = async (parkOfficerID, protocolID) =>
+  await httpClient.delete(
+    `parkOfficers/${parkOfficerID}/protocols/${protocolID}`
+  );
+
+export const updateProtocol = async (parkOfficerID, protocolID, updatedData) =>
+  await httpClient.put(
+    `/parkOfficers/${parkOfficerID}/protocols/${protocolID}`,
+    updatedData
+  );

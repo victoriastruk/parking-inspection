@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProtocols } from "../../redux/slices/protocolsSlice";
 import Protocol from "../../components/Protocol/Protocol";
 
+
 const ProtocolsPage = () => {
   const { protocols, isLoading, error } = useSelector(
     (state) => state.protocols
