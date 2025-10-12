@@ -32,3 +32,6 @@ export const updateProtocol = async (parkOfficerID, protocolID, updatedData) =>
     `/parkOfficers/${parkOfficerID}/protocols/${protocolID}`,
     updatedData
   );
+
+export const addProtocolImages = async (images, protocolID) =>
+  await httpClient.post(`/parkOfficers/protocols/${protocolID}/images`, images);
