@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import {
   deleteProtocolByID,
   getAllProtocols,
+  deleteProtocolImageByID,
 } from "../../redux/slices/protocolsSlice";
 import { useDispatch } from "react-redux";
 import AddImage from "../Modals/AddImage";
@@ -15,6 +16,8 @@ const Protocol = ({ protocol }) => {
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
   const [addImagesModalOpen, setAddImagesModalOpen] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const dispatch = useDispatch();
 
   const settings = {
@@ -25,6 +28,9 @@ const Protocol = ({ protocol }) => {
     slidesToScroll: 1,
     adaptiveHeight: true,
     arrows: protocol.images.length > 1,
+    afterChange: (currentImageIndex) => {
+      setCurrentSlide(currentImageIndex);
+    },
   };
   const handleDelete = async () => {
     await dispatch(
@@ -35,6 +41,17 @@ const Protocol = ({ protocol }) => {
     );
     await dispatch(getAllProtocols());
   };
+
+  const deleteImageHandler = async () => {
+    await dispatch(
+      deleteProtocolImageByID({
+        protocolID: protocol.id,
+        imageID: protocol.images[currentSlide].id,
+      })
+    );
+    await dispatch(getAllProtocols());
+  };
+
   return (
     <article className={styles.cardWrapper}>
       <h1>Protocol № {protocol.id}</h1>
@@ -80,6 +97,12 @@ const Protocol = ({ protocol }) => {
             />
           ))}
         </Slider>
+      )}
+
+      {protocol.images.length > 0 && (
+        <button onClick={deleteImageHandler}>
+          Delete current image in the slide
+        </button>
       )}
     </article>
   );
