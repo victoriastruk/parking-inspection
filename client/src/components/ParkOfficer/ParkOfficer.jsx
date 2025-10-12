@@ -25,7 +25,7 @@ const ParkOfficer = ({ parkOfficer }) => {
     await dispatch(getParkOfficers());
   };
   return (
-    <article>
+    <article className={styles.cardWrapper}>
       <h1>{parkOfficer.fullName}</h1>
       <p>Badge number: {parkOfficer.badgeNumber}</p>
       <p>District: {parkOfficer.district}</p>

@@ -19,3 +19,7 @@ export const addParkOfficer = async (parkOfficer) =>
 export const updateParkOfficer = async (parkOfficerID, updatedData) => {
   await httpClient.put(`/parkOfficers/${parkOfficerID}`, updatedData);
 };
+
+export const getAllProtocols = async () => {
+ return await httpClient.get("/parkOfficers/protocols");
+};
