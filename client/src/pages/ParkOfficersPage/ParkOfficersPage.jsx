@@ -27,7 +27,7 @@ const ParkOfficersPage = () => {
     ({ fullName, badgeNumber, district }) =>
       fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
       badgeNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
-      district.toLowerCase().includes(searchValue.toLowerCase)
+      district.toLowerCase().includes(searchValue.toLowerCase())
   );
   const parkOfficersCards = filteredParkOfficers.map((currentParkOfficer) => (
     <ParkOfficer key={currentParkOfficer.id} parkOfficer={currentParkOfficer} />
