@@ -1,5 +1,5 @@
 import React from "react";
-import styles from './ParkOfficer.module.scss';
+import styles from "./ParkOfficer.module.scss";
 
 const ParkOfficer = ({ parkOfficer }) => {
   return (
