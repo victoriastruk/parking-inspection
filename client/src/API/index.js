@@ -4,4 +4,11 @@ const httpClient = axios.create({
   baseURL: "http://localhost:5001/api",
 });
 
-export const getParkOfficers = async () => await httpClient.get("/parkOfficers");
+export const getParkOfficers = async () =>
+  await httpClient.get("/parkOfficers");
+
+export const deleteParkOfficer = async (parkOfficerID) =>
+  await httpClient.delete(`/parkOfficers/${parkOfficerID}`);
+
+export const dismissParkOfficer = async (parkOfficerID) =>
+  await httpClient.put(`/parkOfficers/${parkOfficerID}/dismiss`);
