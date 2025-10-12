@@ -1,5 +1,6 @@
 const createHttpError = require("http-errors");
 const { Protocol, ParkOfficer, Image } = require("../models");
+const { deleteImageFromDisk } = require("../utils");
 
 // getAllProtocols
 // getAllProtocolsByOfficerID
@@ -174,6 +175,31 @@ module.exports.deleteProtocolByID = async (req, res, next) => {
     const {
       params: { id },
     } = req;
+
+    const protocolWithData = await Protocol.findByPk(id, {
+      include: [
+        {
+          model: ParkOfficer,
+          attributes: ["id", "full_name", "badge_number"],
+          as: "parkOfficer",
+        },
+        {
+          model: Image,
+          attributes: ["id", "path"],
+          as: "images",
+        },
+      ],
+    });
+
+    if (!protocolWithData) {
+      return next(createHttpError(404, "Protocol not found"));
+    }
+
+    if (protocolWithData.images.length) {
+      protocolWithData.images.forEach(async (currentImage) => {
+        await deleteImageFromDisk(currentImage.path);
+      });
+    }
 
     const count = await Protocol.destroy({ where: { id } });
     if (count === 0) {
