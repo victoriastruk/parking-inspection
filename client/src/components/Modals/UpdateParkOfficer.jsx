@@ -53,7 +53,7 @@ const UpdateParkOfficer = ({ open, setIsOpen, officer }) => {
         validationSchema={parkOfficerValidationSchema}
         onSubmit={handleUpdateForm}
       >
-        {(formikProps) => (
+        {() => (
           <Form>
             <label>
               Fullname:

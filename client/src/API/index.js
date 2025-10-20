@@ -30,6 +30,10 @@ export const deleteProtocolByID = async (parkOfficerID, protocolID) =>
     `parkOfficers/${parkOfficerID}/protocols/${protocolID}`
   );
 
+export const createProtocol = async (parkOfficerID, protocol) => {
+  await httpClient.post(`parkOfficers/${parkOfficerID}/protocols`, protocol);
+};
+
 export const updateProtocol = async (parkOfficerID, protocolID, updatedData) =>
   await httpClient.put(
     `/parkOfficers/${parkOfficerID}/protocols/${protocolID}`,
