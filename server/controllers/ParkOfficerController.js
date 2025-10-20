@@ -8,7 +8,9 @@ const createHttpError = require("http-errors");
 
 module.exports.getAllParkOfficers = async (req, res, next) => {
   try {
-    const parkOfficers = await ParkOfficer.findAll();
+    const parkOfficers = await ParkOfficer.findAll({
+      order: [["created_at", "DESC"]],
+    });
 
     return res.status(200).send({ data: parkOfficers });
   } catch (error) {

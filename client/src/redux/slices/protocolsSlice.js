@@ -31,6 +31,17 @@ const getAllProtocolsByOfficerID = createAsyncThunk(
   }
 );
 
+const createProtocol = createAsyncThunk(
+  `${SLICE_NAME}/createProtocol`,
+  async ({ parkOfficerID, protocol }, thunkAPI) => {
+    try {
+      await API.createProtocol(parkOfficerID, protocol);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const deleteProtocolByID = createAsyncThunk(
   `${SLICE_NAME}/deleteProtocolByID`,
   async ({ parkOfficerID, protocolID }, thunkAPI) => {
@@ -113,6 +124,19 @@ const protocolSlice = createSlice({
       state.error = action.payload;
     });
 
+    builder.addCase(createProtocol.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(createProtocol.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+    });
+    builder.addCase(createProtocol.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
+
     builder.addCase(deleteProtocolByID.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -169,6 +193,7 @@ const { reducer } = protocolSlice;
 export {
   getAllProtocols,
   getAllProtocolsByOfficerID,
+  createProtocol,
   deleteProtocolByID,
   updateProtocol,
   addImagesToProtocol,

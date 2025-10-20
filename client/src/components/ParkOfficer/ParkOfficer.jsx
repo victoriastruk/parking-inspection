@@ -9,10 +9,12 @@ import {
 import DeleteConfirmation from "../Modals/DeleteConfirmation";
 import UpdateParkOfficer from "../Modals/UpdateParkOfficer";
 import styles from "./ParkOfficer.module.scss";
+import CreateProtocol from "../Modals/CreateProtocol";
 
 const ParkOfficer = ({ parkOfficer }) => {
   const navigate = useNavigate();
-  
+
+  const [createProtocolModalOpen, setCreateProtocolModalOpen] = useState(false);
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
   const [updateParkOfficerOpen, setUpdateParkOfficerOpen] = useState(false);
@@ -37,10 +39,17 @@ const ParkOfficer = ({ parkOfficer }) => {
       <h1>{parkOfficer.fullName}</h1>
       <p>Badge number: {parkOfficer.badgeNumber}</p>
       <p>District: {parkOfficer.district}</p>
-      <p>{parkOfficer.isWorked ? "Worked" : "Not worked"}</p>
+      <p>{parkOfficer.isWorked ? "Working" : "Not working"}</p>
       <button onClick={() => setDeleteConfirmationModalOpen(true)}>
         Delete
       </button>
+      {createProtocolModalOpen && (
+        <CreateProtocol
+          open={createProtocolModalOpen}
+          setIsOpen={setCreateProtocolModalOpen}
+          officerId={parkOfficer.id}
+        />
+      )}
       {deleteConfirmationModalOpen && (
         <DeleteConfirmation
           open={deleteConfirmationModalOpen}
@@ -50,6 +59,7 @@ const ParkOfficer = ({ parkOfficer }) => {
         />
       )}
       <button onClick={() => setUpdateParkOfficerOpen(true)}>Edit</button>
+
       {updateParkOfficerOpen && (
         <UpdateParkOfficer
           open={updateParkOfficerOpen}
