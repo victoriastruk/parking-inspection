@@ -29,7 +29,7 @@ const ParkOfficer = ({ parkOfficer }) => {
       <h1>{parkOfficer.fullName}</h1>
       <p>Badge number: {parkOfficer.badgeNumber}</p>
       <p>District: {parkOfficer.district}</p>
-      <p>{parkOfficer.isWorked ? "Worked" : "Nor worked"}</p>
+      <p>{parkOfficer.isWorked ? "Worked" : "Not worked"}</p>
       <button onClick={() => setDeleteConfirmationModalOpen(true)}>
         Delete
       </button>
