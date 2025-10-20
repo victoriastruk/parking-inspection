@@ -39,7 +39,7 @@ const ParkOfficer = ({ parkOfficer }) => {
       <h1>{parkOfficer.fullName}</h1>
       <p>Badge number: {parkOfficer.badgeNumber}</p>
       <p>District: {parkOfficer.district}</p>
-      <p>{parkOfficer.isWorked ? "Worked" : "Nor worked"}</p>
+      <p>{parkOfficer.isWorked ? "Working" : "Not working"}</p>
 
       <button onClick={handleViewProtocols}>View protocols</button>
       {parkOfficer.isWorked && (
@@ -54,7 +54,7 @@ const ParkOfficer = ({ parkOfficer }) => {
           officerId={parkOfficer.id}
         />
       )}
-      
+
       <button onClick={() => setDeleteConfirmationModalOpen(true)}>
         Delete
       </button>
