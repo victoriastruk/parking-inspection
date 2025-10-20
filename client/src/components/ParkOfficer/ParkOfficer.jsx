@@ -50,6 +50,10 @@ const ParkOfficer = ({ parkOfficer }) => {
           officerId={parkOfficer.id}
         />
       )}
+      
+      <button onClick={() => setDeleteConfirmationModalOpen(true)}>
+        Delete
+      </button>
       {deleteConfirmationModalOpen && (
         <DeleteConfirmation
           open={deleteConfirmationModalOpen}
@@ -58,6 +62,7 @@ const ParkOfficer = ({ parkOfficer }) => {
           deleteCallback={handleDelete}
         />
       )}
+
       <button onClick={() => setUpdateParkOfficerOpen(true)}>Edit</button>
 
       {updateParkOfficerOpen && (
