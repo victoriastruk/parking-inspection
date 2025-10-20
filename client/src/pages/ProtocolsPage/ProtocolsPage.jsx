@@ -88,7 +88,7 @@ const ProtocolsPage = () => {
   return (
     <>
       <h1>
-        {officerFullName ? `${officerFullName} | Protocols` : "Protocols"}
+        {officerFullName ? `${officerFullName} | Protocols` : "All Protocols"}
       </h1>
 
       <section>

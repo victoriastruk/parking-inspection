@@ -11,8 +11,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./Protocol.module.scss";
 import { formatDateTime, timeAgo } from "../../utils/dateUtil";
-import DeleteProtocolConfirmation from "../Modals/DeleteProtocolConfirmation";
 import UpdateProtocol from "../Modals/UpdateProtocol";
+import DeleteConfirmation from "../Modals/DeleteConfirmation";
 
 const Protocol = ({ protocol }) => {
   const [
@@ -20,6 +20,7 @@ const Protocol = ({ protocol }) => {
     setDeleteProtocolConfirmationModalOpen,
   ] = useState(false);
   const [addImagesModalOpen, setAddImagesModalOpen] = useState(false);
+  const [deleteImageModalOpen, setDeleteImageModalOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
@@ -45,6 +46,7 @@ const Protocol = ({ protocol }) => {
         protocolID: protocol.id,
       })
     );
+    setDeleteImageModalOpen(false);
     await dispatch(getAllProtocolsByOfficerID(protocol.officerId));
   };
 
@@ -87,18 +89,17 @@ const Protocol = ({ protocol }) => {
           protocol={protocol}
         />
       )}
-      <button type="button" onClick={handleDelete}>
-        Delete
-      </button>
 
       <button onClick={() => setDeleteProtocolConfirmationModalOpen(true)}>
         Delete
       </button>
+
       {deleteProtocolConfirmationModalOpen && (
-        <DeleteProtocolConfirmation
+        <DeleteConfirmation
           open={deleteProtocolConfirmationModalOpen}
           setIsOpen={setDeleteProtocolConfirmationModalOpen}
-          protocolNumber={protocol.id}
+          title="Delete protocol"
+          message={`Are you sure you want to delete Protocol № ${protocol.id}?`}
           deleteCallback={handleDelete}
         />
       )}
@@ -131,9 +132,19 @@ const Protocol = ({ protocol }) => {
       )}
 
       {protocol.images.length > 0 && (
-        <button onClick={deleteImageHandler}>
+        <button onClick={() => setDeleteImageModalOpen(true)}>
           Delete current image in the slide
         </button>
+      )}
+
+      {deleteImageModalOpen && (
+        <DeleteConfirmation
+          open={deleteImageModalOpen}
+          setIsOpen={setDeleteImageModalOpen}
+          title="Delete image"
+          message="Are you sure you want to delete this image?"
+          deleteCallback={deleteImageHandler}
+        />
       )}
     </article>
   );
