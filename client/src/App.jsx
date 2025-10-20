@@ -19,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ParkOfficersPage />} />
         <Route path="/protocols" element={<ProtocolsPage />} />
+        <Route path="/protocols/:parkOfficerID" element={<ProtocolsPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   deleteParkOfficer,
@@ -10,6 +11,8 @@ import UpdateParkOfficer from "../Modals/UpdateParkOfficer";
 import styles from "./ParkOfficer.module.scss";
 
 const ParkOfficer = ({ parkOfficer }) => {
+  const navigate = useNavigate();
+  
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
   const [updateParkOfficerOpen, setUpdateParkOfficerOpen] = useState(false);
@@ -24,6 +27,11 @@ const ParkOfficer = ({ parkOfficer }) => {
     await dispatch(dismissParkOfficer(parkOfficer.id));
     await dispatch(getParkOfficers());
   };
+
+  const handleViewProtocols = () => {
+    navigate(`/protocols/${parkOfficer.id}`);
+  };
+
   return (
     <article className={styles.cardWrapper}>
       <h1>{parkOfficer.fullName}</h1>
