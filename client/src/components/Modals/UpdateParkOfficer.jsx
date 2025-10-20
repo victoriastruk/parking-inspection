@@ -46,14 +46,14 @@ const UpdateParkOfficer = ({ open, setIsOpen, officer }) => {
       onRequestClose={() => setIsOpen(false)}
       style={customStyles}
     >
-      <h2>Edit officer</h2>
+      <h2> {officer.fullName} | Edit</h2>
       <Formik
         initialValues={initialValues}
         enableReinitialize={true}
         validationSchema={parkOfficerValidationSchema}
         onSubmit={handleUpdateForm}
       >
-        {(formikProps) => (
+        {() => (
           <Form>
             <label>
               Fullname:

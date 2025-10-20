@@ -22,10 +22,17 @@ export const updateParkOfficer = async (parkOfficerID, updatedData) =>
 export const getAllProtocols = async () =>
   await httpClient.get("/parkOfficers/protocols");
 
+export const getAllProtocolsByOfficerID = async (parkOfficerID) =>
+  await httpClient.get(`/parkOfficers/${parkOfficerID}/protocols`);
+
 export const deleteProtocolByID = async (parkOfficerID, protocolID) =>
   await httpClient.delete(
     `parkOfficers/${parkOfficerID}/protocols/${protocolID}`
   );
+
+export const createProtocol = async (parkOfficerID, protocol) => {
+  await httpClient.post(`parkOfficers/${parkOfficerID}/protocols`, protocol);
+};
 
 export const updateProtocol = async (parkOfficerID, protocolID, updatedData) =>
   await httpClient.put(
