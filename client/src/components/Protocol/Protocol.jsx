@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import {
   deleteProtocolByID,
-  getAllProtocols,
   getAllProtocolsByOfficerID,
   deleteProtocolImageByID,
 } from "../../redux/slices/protocolsSlice";
@@ -12,11 +11,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./Protocol.module.scss";
 import { formatDateTime, timeAgo } from "../../utils/dateUtil";
+import DeleteProtocolConfirmation from "../Modals/DeleteProtocolConfirmation";
 import UpdateProtocol from "../Modals/UpdateProtocol";
 
 const Protocol = ({ protocol }) => {
-  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
-    useState(false);
+  const [
+    deleteProtocolConfirmationModalOpen,
+    setDeleteProtocolConfirmationModalOpen,
+  ] = useState(false);
   const [addImagesModalOpen, setAddImagesModalOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -88,6 +90,18 @@ const Protocol = ({ protocol }) => {
       <button type="button" onClick={handleDelete}>
         Delete
       </button>
+
+      <button onClick={() => setDeleteProtocolConfirmationModalOpen(true)}>
+        Delete
+      </button>
+      {deleteProtocolConfirmationModalOpen && (
+        <DeleteProtocolConfirmation
+          open={deleteProtocolConfirmationModalOpen}
+          setIsOpen={setDeleteProtocolConfirmationModalOpen}
+          protocolNumber={protocol.id}
+          deleteCallback={handleDelete}
+        />
+      )}
 
       <button type="button" onClick={() => setAddImagesModalOpen(true)}>
         Add image(s)
