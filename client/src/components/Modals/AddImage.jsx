@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import UploadImage from "../UploadImage/UploadImage";
-import { addImagesToProtocol } from "../../redux/slices/protocolsSlice";
+import {
+  addImagesToProtocol,
+} from "../../redux/slices/protocolsSlice";
 import { useDispatch } from "react-redux";
 
 const customStyles = {
@@ -17,7 +19,7 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const AddImage = ({ open, setIsOpen, protocolID }) => {
+const AddImage = ({ open, setIsOpen, protocolID, onUpdate }) => {
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
 
@@ -30,6 +32,7 @@ const AddImage = ({ open, setIsOpen, protocolID }) => {
 
       try {
         await dispatch(addImagesToProtocol({ protocolID, images: formData }));
+        onUpdate();
       } catch (error) {
         console.error(error);
       }

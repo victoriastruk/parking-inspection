@@ -3,14 +3,10 @@ import Modal from "react-modal";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { protocolValidationSchema } from "../../schemas/protocolValidationSchema";
 import { useDispatch } from "react-redux";
-import { createProtocol } from "../../redux/slices/protocolsSlice";
-
-const initialValues = {
-  serviceNotes: "",
-  fineAmount: "",
-  violatorFullName: "",
-  violatorPassportNumber: "",
-};
+import {
+  updateProtocol,
+  getAllProtocolsByOfficerID,
+} from "../../redux/slices/protocolsSlice";
 
 const customStyles = {
   content: {
@@ -25,21 +21,26 @@ const customStyles = {
 
 Modal.setAppElement("#root");
 
-const CreateProtocol = ({ open, setIsOpen, officerId }) => {
+const UpdateProtocol = ({ open, setIsOpen, protocol }) => {
   const dispatch = useDispatch();
+
+  const initialValues = {
+    serviceNotes: protocol.serviceNotes,
+    fineAmount: protocol.fineAmount,
+    violatorFullName: protocol.violatorFullName,
+    violatorPassportNumber: protocol.violatorPassportNumber,
+  };
 
   const handleSubmit = async (values, { resetForm }) => {
     try {
       await dispatch(
-        createProtocol({
-          parkOfficerID: officerId,
-          protocol: {
-            ...values,
-            fineAmount: Number(values.fineAmount), 
-          },
+        updateProtocol({
+          parkOfficerID: protocol.officerId,
+          protocolID: protocol.id,
+          updatedData: values,
         })
       );
-
+      await dispatch(getAllProtocolsByOfficerID(protocol.officerId));
       resetForm();
       setIsOpen(false);
     } catch (error) {
@@ -53,7 +54,7 @@ const CreateProtocol = ({ open, setIsOpen, officerId }) => {
       onRequestClose={() => setIsOpen(false)}
       style={customStyles}
     >
-      <h2>Create Protocol</h2>
+      <h2>Edit Protocol № {protocol.id}</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={protocolValidationSchema}
@@ -85,7 +86,7 @@ const CreateProtocol = ({ open, setIsOpen, officerId }) => {
               <ErrorMessage name="violatorPassportNumber" component="div" />
             </label>
 
-            <button type="submit">Create Protocol</button>
+            <button type="submit">Edit</button>
             <button type="button" onClick={() => setIsOpen(false)}>
               Cancel
             </button>
@@ -96,4 +97,4 @@ const CreateProtocol = ({ open, setIsOpen, officerId }) => {
   );
 };
 
-export default CreateProtocol;
+export default UpdateProtocol;
