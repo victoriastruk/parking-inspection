@@ -50,7 +50,7 @@ const ParkOfficer = ({ parkOfficer }) => {
           officerId={parkOfficer.id}
         />
       )}
-      
+
       <button onClick={() => setDeleteConfirmationModalOpen(true)}>
         Delete
       </button>

@@ -11,6 +11,7 @@ const ParkOfficersPage = () => {
   );
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All officers");
 
   useEffect(() => {
     dispatch(getParkOfficers());
@@ -23,7 +24,15 @@ const ParkOfficersPage = () => {
     return <div>ERROR HAPPENED</div>;
   }
 
-  const filteredParkOfficers = parkOfficers.filter(
+  const filteredByStatus = parkOfficers.filter((officer) => {
+    if (statusFilter === "All officers") return true;
+    if (statusFilter === "Working Officers") return officer.isWorked === true;
+    if (statusFilter === "Not working Officers")
+      return officer.isWorked === false;
+    return true;
+  });
+
+  const filteredParkOfficers = filteredByStatus.filter(
     ({ fullName, badgeNumber, district }) =>
       fullName.toLowerCase().includes(searchValue.toLowerCase()) ||
       badgeNumber.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -41,6 +50,14 @@ const ParkOfficersPage = () => {
         onChange={({ target: { value } }) => setSearchValue(value)}
         placeholder="Search..."
       />
+      <select
+        value={statusFilter}
+        onChange={({ target: { value } }) => setStatusFilter(value)}
+      >
+        <option>All officers</option>
+        <option>Working Officers</option>
+        <option>Not working Officers</option>
+      </select>
       <button onClick={() => setAddParkOfficerModalOpen(true)}>
         Add officer
       </button>
