@@ -1,7 +1,10 @@
 const router = require("express").Router();
 
-const parlOfficerRouter = require('./ParkOfficer');
+const parlOfficerRouter = require("./ParkOfficer");
 
-router.use('/parkOfficers', parlOfficerRouter);
+const userRouter = require("./User");
+
+router.use("/parkOfficers", parlOfficerRouter);
+router.use("/users", userRouter);
 
 module.exports = router;
