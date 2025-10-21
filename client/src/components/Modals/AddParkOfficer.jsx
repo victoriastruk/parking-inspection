@@ -51,7 +51,7 @@ const AddParkOfficer = ({ open, setIsOpen }) => {
         validationSchema={parkOfficerValidationSchema}
         onSubmit={handleAddParkOfficerSubmit}
       >
-        {(formikProps) => (
+        {() => (
           <Form>
             <label>
               Fullname:

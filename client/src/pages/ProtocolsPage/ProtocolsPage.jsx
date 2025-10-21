@@ -31,7 +31,7 @@ const ProtocolsPage = () => {
     const message = error?.errors?.[0]?.message;
 
     if (message === "Protocols not found") {
-      return <div>No protocols found for this officer</div>;
+      return <div>Protocols not found</div>;
     }
 
     return <div>Unexpected error: {message || "Something went wrong"}</div>;
