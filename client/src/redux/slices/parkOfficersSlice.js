@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import * as API from "../../API";
 
 const SLICE_NAME = "parkOfficer";
@@ -22,6 +23,7 @@ const deleteParkOfficer = createAsyncThunk(
   async (parkOfficerID, thunkAPI) => {
     try {
       await API.deleteParkOfficer(parkOfficerID);
+      toast.success('Officer successfuly deleted');
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
