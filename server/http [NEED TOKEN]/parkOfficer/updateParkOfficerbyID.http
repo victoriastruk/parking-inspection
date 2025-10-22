@@ -1,0 +1,7 @@
+PUT http://localhost:5001/api/parkOfficers/2 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGY5MjMxY2VhNTE5YjEzMmRkNzEzYTciLCJlbWFpbCI6InN1cGVyLXVzZXIxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTc2MTE1NzkxNiwiZXhwIjoxNzYxMTU3OTE5fQ.kccJJwNN08kVA-z7sfBmUfT2u1ZBrIEEXO7Wxc5bSck
+
+{
+   "badgeNumber": "123457-U"
+}
