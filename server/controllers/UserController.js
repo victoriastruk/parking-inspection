@@ -1,13 +1,39 @@
 const bcrypt = require("bcrypt");
-const { User } = require("../models/MongoDB");
+const { User, RefreshToken } = require("../models/MongoDB");
+const {
+  createAccessToken,
+  createRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+} = require("../services/createSession");
+const createHttpError = require("http-errors");
 
 module.exports.registrationUser = async (req, res, next) => {
   try {
-    const { body, passwordHash } = req;
+    const {
+      body,
+      passwordHash,
+    } = req;
 
     const createdUser = await User.create({ ...body, passwordHash });
 
-    return res.status(201).send({ data: createdUser });
+    const accessToken = await createAccessToken({
+      userId: createdUser._id,
+      email: createdUser.email,
+      role: createdUser.role,
+      geolocation: body.geolocation,
+    });
+
+    const refreshToken = await createRefreshToken({
+      userId: createdUser._id,
+      email: createdUser.email,
+      role: createdUser.role,
+      geolocation: body.geolocation,
+    });
+
+    return res
+      .status(201)
+      .send({ data: createdUser, tokents: { accessToken, refreshToken } });
   } catch (error) {
     next(error);
   }
@@ -16,7 +42,10 @@ module.exports.registrationUser = async (req, res, next) => {
 module.exports.loginUser = async (req, res, next) => {
   try {
     const {
-      body: { email, password },
+      body: {
+        email,
+        password,
+      },
     } = req;
     const foundUser = await User.findOne({
       email,
@@ -27,9 +56,101 @@ module.exports.loginUser = async (req, res, next) => {
       if (!result) {
         return res.status(404).send("Incorrect email or password");
       }
-      return res.status(200).send({ data: foundUser });
+
+      const accessToken = await createAccessToken({
+        userId: foundUser._id,
+        email: foundUser.email,
+        role: foundUser.role,
+        geolocation: body.geolocation,
+      });
+
+      const refreshToken = await createRefreshToken({
+        userId: foundUser._id,
+        email: foundUser.email,
+        role: foundUser.role,
+        geolocation: body.geolocation,
+      });
+
+      return res
+        .status(200)
+        .send({ data: foundUser, tokens: { accessToken, refreshToken } });
     } else {
       return res.status(404).send("Incorrect email or password");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.checkAuth = async (req, res, next) => {
+  try {
+    const {
+      tokenPayload: { email },
+    } = req;
+
+    const foundUser = await User.findOne({ email });
+
+    return res.status(200).send({ data: foundUser });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.refreshSession = async (req, res, next) => {
+  const {
+    body: { refreshToken, geolocation },
+  } = req;
+
+  let verifyResult;
+
+  try {
+    verifyResult = await verifyRefreshToken(refreshToken);
+  } catch (error) {
+    return next(createHttpError(401, "Invalid refresh token"));
+  }
+
+  try {
+    if (verifyResult) {
+      const user = await User.findOne({ _id: verifyResult.userId });
+
+      const oldRefreshTokenFromDB = await RefreshToken.findOne({
+        $and: [{ token: refreshToken }, { userId: user._id }],
+      });
+
+      if (oldRefreshTokenFromDB) {
+        await RefreshToken.deleteOne({
+          $and: [{ token: refreshToken }, { userId: user._id }],
+        });
+
+        const newAccessToken = await createAccessToken({
+          userId: user._id,
+          email: user.email,
+          role: user.role,
+          geolocation,
+        });
+
+        const newRefreshToken = await createRefreshToken({
+          userId: user._id,
+          email: user.email,
+          role: user.role,
+          geolocation,
+        });
+
+        await RefreshToken.create({
+          token: newRefreshToken,
+          userId: user._id,
+          geolocation,
+        });
+
+        return res.status(200).send({
+          tokens: {
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+          },
+        });
+      }
+    } else {
+      return next(createHttpError(401, "Token not found"));
     }
   } catch (error) {
     next(error);
