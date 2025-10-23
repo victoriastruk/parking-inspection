@@ -1,0 +1,18 @@
+.navList {
+   font-size: 2em;
+   display: flex;
+   justify-content: center;
+   gap: 40px;
+}
+
+li {
+   list-style-type: none;
+}
+
+.link{
+   text-decoration: none;
+   color: black;
+   &:hover{
+      border-bottom: 1px dashed black;
+   }
+}

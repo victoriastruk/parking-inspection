@@ -47,3 +47,91 @@ export const deleteProtocolImageByID = async (protocoID, imageID) =>
   await httpClient.delete(
     `/parkOfficers/protocols/${protocoID}/images/${imageID}`
   );
+
+let geolocation;
+navigator.geolocation.getCurrentPosition(
+  ({ coords: { latitude, longitude } }) => {
+    geolocation = `${latitude} ${longitude}`;
+  }
+);
+
+export const loginUser = async (userData) =>
+  await httpClient.post("/users/sign-in", {
+    ...userData,
+    geolocation,
+  });
+
+export const registerUser = async (userData) =>
+  await httpClient.post("/users/sign-up", {
+    ...userData,
+    geolocation,
+  });
+
+// TOKENS
+
+export const authUser = async () => await httpClient.get("/users");
+
+export const refreshUser = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  const { data } = await httpClient.post("/users/refresh", {
+    refreshToken,
+    geolocation,
+  });
+
+  return data;
+};
+
+httpClient.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    return config;
+  },
+  (err) => Promise.reject(err)
+);
+
+httpClient.interceptors.response.use(
+  (response) => {
+    const tokens = response.data?.tokens;
+    if (tokens) {
+      localStorage.setItem("accessToken", tokens.accessToken);
+      localStorage.setItem("refreshToken", tokens.refreshToken);
+    }
+    return response;
+  },
+  async (err) => {
+    const originalRequest = err.config;
+
+    if (!err.response) {
+      return Promise.reject({ message: "Server not reachable" });
+    }
+
+    const status = err.response.status;
+
+    if (status === 403 && localStorage.getItem("refreshToken")) {
+      try {
+        const { accessToken, refreshToken } = await refreshUser();
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        return await httpClient(originalRequest);
+      } catch (refreshError) {
+        localStorage.clear();
+        return Promise.reject({ message: "Session expired" });
+      }
+    }
+
+    if (status === 401) {
+      localStorage.clear();
+      return Promise.reject({ message: "Unauthorized" });
+    }
+
+    return Promise.reject(err);
+  }
+);

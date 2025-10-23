@@ -10,10 +10,8 @@ const createHttpError = require("http-errors");
 
 module.exports.registrationUser = async (req, res, next) => {
   try {
-    const {
-      body,
-      passwordHash,
-    } = req;
+    const { body, passwordHash } = req;
+    const { geolocation } = body;
 
     const createdUser = await User.create({ ...body, passwordHash });
 
@@ -21,19 +19,19 @@ module.exports.registrationUser = async (req, res, next) => {
       userId: createdUser._id,
       email: createdUser.email,
       role: createdUser.role,
-      geolocation: body.geolocation,
+      geolocation,
     });
 
     const refreshToken = await createRefreshToken({
       userId: createdUser._id,
       email: createdUser.email,
       role: createdUser.role,
-      geolocation: body.geolocation,
+      geolocation,
     });
 
     return res
       .status(201)
-      .send({ data: createdUser, tokents: { accessToken, refreshToken } });
+      .send({ data: createdUser, tokens: { accessToken, refreshToken } });
   } catch (error) {
     next(error);
   }
@@ -42,10 +40,7 @@ module.exports.registrationUser = async (req, res, next) => {
 module.exports.loginUser = async (req, res, next) => {
   try {
     const {
-      body: {
-        email,
-        password,
-      },
+      body: { email, password, geolocation },
     } = req;
     const foundUser = await User.findOne({
       email,
@@ -61,14 +56,14 @@ module.exports.loginUser = async (req, res, next) => {
         userId: foundUser._id,
         email: foundUser.email,
         role: foundUser.role,
-        geolocation: body.geolocation,
+        geolocation,
       });
 
       const refreshToken = await createRefreshToken({
         userId: foundUser._id,
         email: foundUser.email,
         role: foundUser.role,
-        geolocation: body.geolocation,
+        geolocation,
       });
 
       return res

@@ -1,16 +1,19 @@
 import ParkOfficersPage from "./pages/ParkOfficersPage/ParkOfficersPage";
 import ProtocolsPage from "./pages/ProtocolsPage/ProtocolsPage";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
-import styles from "./App.module.scss";
-import useErrorToast from "./hooks/useErrorToast";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useErrorToast from "./hooks/useErrorToast";
+import CreateProtocol from "./pages/CreateProtocol/CreateProtocol";
+import AddParkOfficer from "./pages/AddParkOfficer/AddParkOfficer";
+import UpdateParkOfficer from "./pages/UpdateParkOfficer/UpdateParkOfficer";
+import UpdateProtocol from "./pages/UpdateProtocol/UpdateProtocol"; // якщо є така сторінка
 
 function App() {
   useErrorToast();
 
   return (
-    // <HomePage/>
     <BrowserRouter>
       <ToastContainer
         position="top-right"
@@ -24,24 +27,15 @@ function App() {
         newestOnTop
         theme="colored"
       />
-      <nav>
-        <ul className={styles.navList}>
-          <li>
-            <Link className={styles.link} to="/">
-              Officers
-            </Link>
-          </li>
-          <li>
-            <Link className={styles.link} to="/protocols">
-              Protocols
-            </Link>
-          </li>
-        </ul>
-      </nav>
+
       <Routes>
-         <Route path="/" element={<HomePage/>}/>
-        {/* <Route path="/" element={<ParkOfficersPage />} /> */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/officers" element={<ParkOfficersPage />} />
+        <Route path="/officers/add" element={<AddParkOfficer />} />
+        <Route path="/officers/edit/:parkOfficerID" element={<UpdateParkOfficer />} />
         <Route path="/protocols" element={<ProtocolsPage />} />
+        <Route path="/protocols/create/:parkOfficerID" element={<CreateProtocol />} />
+        <Route path="/protocol/edit/:protocolID" element={<UpdateProtocol />} />
         <Route path="/protocols/:parkOfficerID" element={<ProtocolsPage />} />
       </Routes>
     </BrowserRouter>

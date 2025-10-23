@@ -6,6 +6,7 @@ import {
   getAllProtocolsByOfficerID,
 } from "../../redux/slices/protocolsSlice";
 import Protocol from "../../components/Protocol/Protocol";
+import NavBar from "../../components/NavBar/NavBar";
 
 const ProtocolsPage = () => {
   const { parkOfficerID } = useParams();
@@ -87,6 +88,7 @@ const ProtocolsPage = () => {
       : null;
   return (
     <>
+      <NavBar />
       <h1>
         {officerFullName ? `${officerFullName} | Protocols` : "All Protocols"}
       </h1>

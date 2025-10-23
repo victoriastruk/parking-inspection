@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { signUpValidationSchema } from "../../schemas/signUpValidationSchema";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../redux/slices/userSlice";
 const initialValues = {
   nickname: "",
@@ -10,10 +11,17 @@ const initialValues = {
 };
 const SignUp = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmitSignUp = async (values, { resetForm }) => {
-    await dispatch(registerUser(values));
+    const response = await dispatch(registerUser(values));
     resetForm();
+
+  if (response.meta.requestStatus === "fulfilled") {
+    navigate("/officers");
+  } else {
+    console.error("Login failed", response.payload);
+  }
   };
   return (
     <>

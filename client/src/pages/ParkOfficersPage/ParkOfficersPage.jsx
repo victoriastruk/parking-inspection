@@ -3,8 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getParkOfficers } from "../../redux/slices/parkOfficersSlice";
 import ParkOfficer from "../../components/ParkOfficer/ParkOfficer";
 import AddParkOfficer from "../../components/Modals/AddParkOfficer";
+import { useNavigate } from "react-router-dom";
+import NavBar from "../../components/NavBar/NavBar";
 
 const ParkOfficersPage = () => {
+  const navigate = useNavigate();
+
   const [addParkOfficerModalOpen, setAddParkOfficerModalOpen] = useState(false);
   const { parkOfficers, isLoading, error } = useSelector(
     (state) => state.parkOfficers
@@ -14,7 +18,16 @@ const ParkOfficersPage = () => {
   const [statusFilter, setStatusFilter] = useState("All officers");
 
   useEffect(() => {
-    dispatch(getParkOfficers());
+    dispatch(getParkOfficers())
+      .unwrap()
+      .catch((err) => {
+        if (
+          err.message === "Unauthorized" ||
+          err.message === "Session expired"
+        ) {
+          navigate("/");
+        }
+      });
   }, []);
 
   if (isLoading) {
@@ -43,32 +56,35 @@ const ParkOfficersPage = () => {
   ));
 
   return (
-    <section>
-      <input
-        type="text"
-        value={searchValue}
-        onChange={({ target: { value } }) => setSearchValue(value)}
-        placeholder="Search..."
-      />
-      <select
-        value={statusFilter}
-        onChange={({ target: { value } }) => setStatusFilter(value)}
-      >
-        <option>All officers</option>
-        <option>Working Officers</option>
-        <option>Not working Officers</option>
-      </select>
-      <button onClick={() => setAddParkOfficerModalOpen(true)}>
-        Add officer
-      </button>
-      {parkOfficersCards}
-      {addParkOfficerModalOpen && (
-        <AddParkOfficer
-          open={addParkOfficerModalOpen}
-          setIsOpen={setAddParkOfficerModalOpen}
+    <>
+      <NavBar />
+      <section>
+        <input
+          type="text"
+          value={searchValue}
+          onChange={({ target: { value } }) => setSearchValue(value)}
+          placeholder="Search..."
         />
-      )}
-    </section>
+        <select
+          value={statusFilter}
+          onChange={({ target: { value } }) => setStatusFilter(value)}
+        >
+          <option>All officers</option>
+          <option>Working Officers</option>
+          <option>Not working Officers</option>
+        </select>
+        <button onClick={() => setAddParkOfficerModalOpen(true)}>
+          Add officer
+        </button>
+        {parkOfficersCards}
+        {addParkOfficerModalOpen && (
+          <AddParkOfficer
+            open={addParkOfficerModalOpen}
+            setIsOpen={setAddParkOfficerModalOpen}
+          />
+        )}
+      </section>
+    </>
   );
 };
 

@@ -1,7 +1,8 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { signInValidationSchema } from "../../schemas/signInValidationSchema";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../redux/slices/userSlice";
 
 const initialValues = {
@@ -10,10 +11,17 @@ const initialValues = {
 };
 const SignIn = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmitSignIn = async (values, { resetForm }) => {
-    await dispatch(loginUser(values));
+    const response = await dispatch(loginUser(values));
     resetForm();
+
+   if (response.meta.requestStatus === "fulfilled") {
+    navigate("/officers");
+  } else {
+    console.error("Login failed", response.payload);
+  }
   };
   return (
     <>
