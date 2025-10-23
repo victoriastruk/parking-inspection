@@ -1,3 +1,4 @@
+const createHttpError = require("http-errors");
 const { verifyAccessToken } = require("../services/createSession");
 
 module.exports.checkToken = async (req, res, next) => {

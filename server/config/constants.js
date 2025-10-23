@@ -3,7 +3,7 @@ const CONSTANTS = {
   ACCESS_EXPIRES_TIME: 60,
   REFRESH_EXPIRES_TIME: '1h',
   ACCESS_SECRET: 'sfdjfhkfhkjfewfjsdhfk',
-  REFRESH_SERCRET: 'ksjfhsfgajgfdkjgfkadsfg'
+  REFRESH_SECRET: 'ksjfhsfgajgfdkjgfkadsfg'
 };
 
 module.exports = CONSTANTS;

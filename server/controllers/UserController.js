@@ -11,8 +11,6 @@ const createHttpError = require("http-errors");
 module.exports.registrationUser = async (req, res, next) => {
   try {
     const { body, passwordHash } = req;
-    const { geolocation } = body;
-
     const createdUser = await User.create({ ...body, passwordHash });
 
     const accessToken = await createAccessToken({
@@ -29,6 +27,12 @@ module.exports.registrationUser = async (req, res, next) => {
       geolocation,
     });
 
+    await RefreshToken.create({
+      token: refreshToken,
+      userId: createdUser._id,
+      geolocation,
+    });
+
     return res
       .status(201)
       .send({ data: createdUser, tokens: { accessToken, refreshToken } });
@@ -42,6 +46,7 @@ module.exports.loginUser = async (req, res, next) => {
     const {
       body: { email, password, geolocation },
     } = req;
+
     const foundUser = await User.findOne({
       email,
     });
@@ -63,6 +68,12 @@ module.exports.loginUser = async (req, res, next) => {
         userId: foundUser._id,
         email: foundUser.email,
         role: foundUser.role,
+        geolocation,
+      });
+
+      await RefreshToken.create({
+        token: refreshToken,
+        userId: foundUser._id,
         geolocation,
       });
 

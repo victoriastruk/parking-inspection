@@ -118,3 +118,6 @@ module.exports.dismissParkOfficerByID = async (req, res, next) => {
     next(error);
   }
 };
+
+//! TODO
+module.exports.restoreParkOfficerByID = async (req, res, next) => {};
