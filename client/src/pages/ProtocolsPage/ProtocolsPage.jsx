@@ -22,7 +22,7 @@ const ProtocolsPage = () => {
     } else {
       dispatch(getAllProtocols());
     }
-  }, []);
+  }, [dispatch, parkOfficerID]);
 
   if (isLoading) {
     return <div>LOADING</div>;
@@ -71,7 +71,9 @@ const ProtocolsPage = () => {
         protocol.parkOfficer?.full_name
           .toLowerCase()
           .includes(lowerCaseQuery) ||
-        protocol.arkOfficer?.badge_number.toLowerCase().includes(lowerCaseQuery)
+        protocol.parkOfficer?.badge_number
+          .toLowerCase()
+          .includes(lowerCaseQuery)
       );
     });
   };

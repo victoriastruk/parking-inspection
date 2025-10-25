@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import * as API from "../../API";
 
 const SLICE_NAME = "protocols";
@@ -36,6 +37,7 @@ const createProtocol = createAsyncThunk(
   async ({ parkOfficerID, protocol }, thunkAPI) => {
     try {
       await API.createProtocol(parkOfficerID, protocol);
+      toast.success("Protocol successfuly created");
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -47,6 +49,7 @@ const deleteProtocolByID = createAsyncThunk(
   async ({ parkOfficerID, protocolID }, thunkAPI) => {
     try {
       await API.deleteProtocolByID(parkOfficerID, protocolID);
+       toast.success("Protocol successfuly deleted");
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -58,6 +61,7 @@ const updateProtocol = createAsyncThunk(
   async ({ parkOfficerID, protocolID, updatedData }, thunkAPI) => {
     try {
       await API.updateProtocol(parkOfficerID, protocolID, updatedData);
+       toast.success("Protocol successfuly updated");
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }

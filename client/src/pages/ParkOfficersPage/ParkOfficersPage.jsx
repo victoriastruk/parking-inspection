@@ -26,7 +26,7 @@ const ParkOfficersPage = () => {
           navigate("/");
         }
       });
-  }, []);
+  }, [dispatch, navigate]);
 
   if (isLoading) {
     return <div>LOADING</div>;

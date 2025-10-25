@@ -23,7 +23,7 @@ const deleteParkOfficer = createAsyncThunk(
   async (parkOfficerID, thunkAPI) => {
     try {
       await API.deleteParkOfficer(parkOfficerID);
-      toast.success('Officer successfuly deleted');
+      toast.success("Officer successfuly deleted");
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -46,6 +46,7 @@ const addParkOfficer = createAsyncThunk(
   async (parkOfficer, thunkAPI) => {
     try {
       await API.addParkOfficer(parkOfficer);
+      toast.success("Officer successfuly added");
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -54,7 +55,7 @@ const addParkOfficer = createAsyncThunk(
 
 const updateParkOfficer = createAsyncThunk(
   `${SLICE_NAME}/updateParkOfficer`,
-  async ({parkOfficerID, updatedData}, thunkAPI) => {
+  async ({ parkOfficerID, updatedData }, thunkAPI) => {
     try {
       await API.updateParkOfficer(parkOfficerID, updatedData);
     } catch (error) {
@@ -144,7 +145,7 @@ export {
   deleteParkOfficer,
   dismissParkOfficer,
   addParkOfficer,
-  updateParkOfficer
+  updateParkOfficer,
 };
 
 export default reducer;
