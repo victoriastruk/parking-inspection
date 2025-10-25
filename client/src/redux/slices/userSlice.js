@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import * as API from "../../API";
 
 const SLICE_NAME = "users";
@@ -49,10 +50,12 @@ const userSlice = createSlice({
       state.error = null;
       state.isLoading = false;
       state.user = action.payload;
+      toast.success("User successfully logged in");
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to log in user");
     });
 
     builder.addCase(registerUser.pending, (state) => {
@@ -63,10 +66,12 @@ const userSlice = createSlice({
       state.error = null;
       state.isLoading = false;
       state.user = action.payload;
+      toast.success("User successfully registered");
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to register user");
     });
   },
 });
