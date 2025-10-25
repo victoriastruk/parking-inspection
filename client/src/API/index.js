@@ -76,7 +76,6 @@ export const refreshUser = async () => {
 
   const { data } = await httpClient.post("/users/refresh", {
     refreshToken,
-    geolocation,
   });
 
   return data;
@@ -122,14 +121,17 @@ httpClient.interceptors.response.use(
 
         return await httpClient(originalRequest);
       } catch (refreshError) {
-        localStorage.clear();
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         return Promise.reject({ message: "Session expired" });
       }
     }
 
     if (status === 401) {
-      localStorage.clear();
-      return Promise.reject({ message: "Unauthorized" });
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
+        return Promise.reject({ message: "Unauthorized" });
+      }
     }
 
     return Promise.reject(err);
