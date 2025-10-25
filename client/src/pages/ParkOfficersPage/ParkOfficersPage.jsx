@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getParkOfficers } from "../../redux/slices/parkOfficersSlice";
 import ParkOfficer from "../../components/ParkOfficer/ParkOfficer";
-import AddParkOfficer from "../../components/Modals/AddParkOfficer";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar/NavBar";
 
 const ParkOfficersPage = () => {
   const navigate = useNavigate();
 
-  const [addParkOfficerModalOpen, setAddParkOfficerModalOpen] = useState(false);
-  const { parkOfficers, isLoading, error } = useSelector(
+   const { parkOfficers, isLoading, error } = useSelector(
     (state) => state.parkOfficers
   );
   const dispatch = useDispatch();
@@ -36,7 +34,9 @@ const ParkOfficersPage = () => {
   if (error) {
     return <div>ERROR HAPPENED</div>;
   }
-
+  const handleAddOfficer = () => {
+    navigate('/officers/add')
+  }
   const filteredByStatus = parkOfficers.filter((officer) => {
     if (statusFilter === "All officers") return true;
     if (statusFilter === "Working Officers") return officer.isWorked === true;
@@ -73,16 +73,10 @@ const ParkOfficersPage = () => {
           <option>Working Officers</option>
           <option>Not working Officers</option>
         </select>
-        <button onClick={() => setAddParkOfficerModalOpen(true)}>
+        <button onClick={handleAddOfficer}>
           Add officer
         </button>
         {parkOfficersCards}
-        {addParkOfficerModalOpen && (
-          <AddParkOfficer
-            open={addParkOfficerModalOpen}
-            setIsOpen={setAddParkOfficerModalOpen}
-          />
-        )}
       </section>
     </>
   );
