@@ -23,7 +23,6 @@ const deleteParkOfficer = createAsyncThunk(
   async (parkOfficerID, thunkAPI) => {
     try {
       await API.deleteParkOfficer(parkOfficerID);
-      toast.success("Officer successfuly deleted");
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -46,7 +45,6 @@ const addParkOfficer = createAsyncThunk(
   async (parkOfficer, thunkAPI) => {
     try {
       await API.addParkOfficer(parkOfficer);
-      toast.success("Officer successfuly added");
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -94,10 +92,12 @@ const parkOfficerSlice = createSlice({
     builder.addCase(deleteParkOfficer.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Officer successfully deleted");
     });
     builder.addCase(deleteParkOfficer.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to delete officer");
     });
     builder.addCase(dismissParkOfficer.pending, (state) => {
       state.isLoading = true;
@@ -106,10 +106,12 @@ const parkOfficerSlice = createSlice({
     builder.addCase(dismissParkOfficer.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Officer successfully dismissed");
     });
     builder.addCase(dismissParkOfficer.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to dismiss officer");
     });
     builder.addCase(addParkOfficer.pending, (state) => {
       state.isLoading = true;
@@ -118,10 +120,12 @@ const parkOfficerSlice = createSlice({
     builder.addCase(addParkOfficer.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Officer successfully added");
     });
     builder.addCase(addParkOfficer.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to add officer");
     });
     builder.addCase(updateParkOfficer.pending, (state) => {
       state.isLoading = true;
@@ -130,10 +134,12 @@ const parkOfficerSlice = createSlice({
     builder.addCase(updateParkOfficer.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Officer successfully updated");
     });
     builder.addCase(updateParkOfficer.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to update officer");
     });
   },
 });
