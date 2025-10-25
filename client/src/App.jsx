@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { authUser } from "./API";
 import ParkOfficersPage from "./pages/ParkOfficersPage/ParkOfficersPage";
 import ProtocolsPage from "./pages/ProtocolsPage/ProtocolsPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -8,9 +11,17 @@ import useErrorToast from "./hooks/useErrorToast";
 import CreateProtocol from "./pages/CreateProtocol/CreateProtocol";
 import AddParkOfficer from "./pages/AddParkOfficer/AddParkOfficer";
 import UpdateParkOfficer from "./pages/UpdateParkOfficer/UpdateParkOfficer";
-import UpdateProtocol from "./pages/UpdateProtocol/UpdateProtocol"; // якщо є така сторінка
+import UpdateProtocol from "./pages/UpdateProtocol/UpdateProtocol"; 
 
 function App() {
+   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      dispatch(authUser());
+    }
+  }, [dispatch]);
   useErrorToast();
 
   return (

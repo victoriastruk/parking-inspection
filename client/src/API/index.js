@@ -48,10 +48,13 @@ export const deleteProtocolImageByID = async (protocoID, imageID) =>
     `/parkOfficers/protocols/${protocoID}/images/${imageID}`
   );
 
-let geolocation;
+let geolocation = null;
 navigator.geolocation.getCurrentPosition(
   ({ coords: { latitude, longitude } }) => {
     geolocation = `${latitude} ${longitude}`;
+  },
+  () => {
+    geolocation = null;
   }
 );
 
@@ -78,7 +81,7 @@ export const refreshUser = async () => {
     refreshToken,
   });
 
-  return data;
+  return data.tokens;
 };
 
 httpClient.interceptors.request.use(
@@ -118,7 +121,7 @@ httpClient.interceptors.response.use(
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return await httpClient(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem("accessToken");
