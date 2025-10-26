@@ -7,7 +7,6 @@ import {
   deleteProtocolImageByID,
 } from "../../redux/slices/protocolsSlice";
 import { useDispatch } from "react-redux";
-import AddImage from "../Modals/AddImage";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./Protocol.module.scss";
@@ -20,7 +19,6 @@ const Protocol = ({ protocol }) => {
     deleteProtocolConfirmationModalOpen,
     setDeleteProtocolConfirmationModalOpen,
   ] = useState(false);
-  const [addImagesModalOpen, setAddImagesModalOpen] = useState(false);
   const [deleteImageModalOpen, setDeleteImageModalOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -37,6 +35,10 @@ const Protocol = ({ protocol }) => {
     afterChange: (currentImageIndex) => {
       setCurrentSlide(currentImageIndex);
     },
+  };
+
+  const handleAddImages = () => {
+    navigate(`/protocol/add-images/${protocol.id}`);
   };
 
   const handleUpdateProtocol = () => {
@@ -101,19 +103,9 @@ const Protocol = ({ protocol }) => {
         />
       )}
 
-      <button type="button" onClick={() => setAddImagesModalOpen(true)}>
+      <button type="button" onClick={handleAddImages}>
         Add image(s)
       </button>
-      {addImagesModalOpen && (
-        <AddImage
-          open={addImagesModalOpen}
-          setIsOpen={setAddImagesModalOpen}
-          protocolID={protocol.id}
-          onUpdate={() =>
-            dispatch(getAllProtocolsByOfficerID(protocol.officerId))
-          }
-        />
-      )}
 
       {protocol.images.length > 0 && (
         <Slider {...settings} className={styles.slider}>

@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../redux/slices/userSlice";
 
+import styles from './SignIn.module.scss'
+
 const initialValues = {
   email: "",
   password: "",
@@ -25,7 +27,7 @@ const SignIn = () => {
   };
   return (
     <>
-      <h2>Sign in</h2>
+      <h2 className={styles.title}>Sign in</h2>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmitSignIn}

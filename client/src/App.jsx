@@ -12,6 +12,7 @@ import CreateProtocolPage from "./pages/CreateProtocolPage/CreateProtocolPage";
 import AddParkOfficerPage from "./pages/AddParkOfficerPage/AddParkOfficerPage";
 import UpdateParkOfficerPage from "./pages/UpdateParkOfficerPage/UpdateParkOfficerPage";
 import UpdateProtocolPage from "./pages/UpdateProtocolPage/UpdateProtocolPage";
+import AddImagesPage from "./pages/AddImagesPage/AddImagesPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ function App() {
           element={<UpdateProtocolPage />}
         />
         <Route path="/protocols/:parkOfficerID" element={<ProtocolsPage />} />
+        <Route path="/protocol/add-images/:protocolID" element={<AddImagesPage/>}/>
       </Routes>
     </BrowserRouter>
   );
