@@ -8,6 +8,7 @@ import {
 } from "../../redux/slices/parkOfficersSlice";
 import DeleteConfirmation from "../Modals/DeleteConfirmation";
 import styles from "./ParkOfficer.module.scss";
+import UpdateParkOfficerForm from "../Forms/UpdateParkOfficerForm";
 
 
 const ParkOfficer = ({ parkOfficer }) => {
@@ -20,6 +21,7 @@ const ParkOfficer = ({ parkOfficer }) => {
   const handleEditParkOfficer = () => {
     navigate(`/officers/edit/${parkOfficer.id}`);
   };
+
   const handleDelete = async () => {
     await dispatch(deleteParkOfficer(parkOfficer.id));
     await dispatch(getParkOfficers());
