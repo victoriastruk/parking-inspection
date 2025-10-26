@@ -8,11 +8,17 @@ const createHttpError = require("http-errors");
 
 module.exports.getAllParkOfficers = async (req, res, next) => {
   try {
-    const parkOfficers = await ParkOfficer.findAll({
-      order: [["created_at", "DESC"]],
-    });
+    const { pagination } = req;
+    const { limit, offset } = pagination;
 
-    return res.status(200).send({ data: parkOfficers });
+    const { rows: parkOfficers, count: total } =
+      await ParkOfficer.findAndCountAll({
+        order: [["created_at", "DESC"]],
+        limit,
+        offset,
+      });
+
+    return res.status(200).send({ data: parkOfficers, total });
   } catch (error) {
     next(error);
   }

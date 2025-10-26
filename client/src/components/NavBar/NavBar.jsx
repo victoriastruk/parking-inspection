@@ -7,7 +7,7 @@ const NavBar = () => {
     <nav>
       <ul className={styles.navList}>
         <li>
-          <Link className={styles.link} to="/">
+          <Link className={styles.link} to="/officers">
             Officers
           </Link>
         </li>

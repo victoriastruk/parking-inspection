@@ -14,12 +14,12 @@ parkOfficerRouter
 
 parkOfficerRouter
   .route("/")
-  .get(checkToken, ParkOfficerController.getAllParkOfficers)
+  .get(checkToken, paginate, ParkOfficerController.getAllParkOfficers)
   .post(checkToken, ParkOfficerController.createParkOfficer);
 
 parkOfficerRouter
   .route("/:id")
-  .get(checkToken, paginate, ParkOfficerController.getParkOfficerByID)
+  .get(checkToken, ParkOfficerController.getParkOfficerByID)
   .put(checkToken, ParkOfficerController.updateParkOfficerByID)
   .delete(checkToken, ParkOfficerController.deleteParkOfficerByID);
 

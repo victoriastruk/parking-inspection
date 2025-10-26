@@ -6,12 +6,12 @@ const SLICE_NAME = "parkOfficer";
 
 const getParkOfficers = createAsyncThunk(
   `${SLICE_NAME}/getParkOfficers`,
-  async (param, thunkAPI) => {
+  async ({ limit = 5, offset = 0 } = {}, thunkAPI) => {
     try {
       const {
-        data: { data: parkOfficers },
-      } = await API.getParkOfficers();
-      return parkOfficers;
+        data: { data: parkOfficers, total },
+      } = await API.getParkOfficers(limit, offset);
+      return { parkOfficers, total };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -75,6 +75,7 @@ const updateParkOfficer = createAsyncThunk(
 
 const initialState = {
   parkOfficers: [],
+  total: 0,
   isLoading: false,
   error: null,
 };
@@ -90,7 +91,8 @@ const parkOfficerSlice = createSlice({
     builder.addCase(getParkOfficers.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
-      state.parkOfficers = action.payload;
+      state.parkOfficers = action.payload.parkOfficers;
+      state.total = action.payload.total;
     });
     builder.addCase(getParkOfficers.rejected, (state, action) => {
       state.isLoading = false;

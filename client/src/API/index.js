@@ -4,8 +4,8 @@ const httpClient = axios.create({
   baseURL: "http://localhost:5001/api",
 });
 
-export const getParkOfficers = async () =>
-  await httpClient.get("/parkOfficers");
+export const getParkOfficers = async (limit = 5, offset = 0) =>
+  await httpClient.get(`/parkOfficers?limit=${limit}&offset=${offset}`);
 
 export const deleteParkOfficer = async (parkOfficerID) =>
   await httpClient.delete(`/parkOfficers/${parkOfficerID}`);
@@ -22,11 +22,13 @@ export const addParkOfficer = async (parkOfficer) =>
 export const updateParkOfficer = async (parkOfficerID, updatedData) =>
   await httpClient.put(`/parkOfficers/${parkOfficerID}`, updatedData);
 
-export const getAllProtocols = async () =>
-  await httpClient.get("/parkOfficers/protocols");
+export const getAllProtocols = (limit = 5, offset = 0) =>
+  httpClient.get(`/parkOfficers/protocols?limit=${limit}&offset=${offset}`);
 
-export const getAllProtocolsByOfficerID = async (parkOfficerID) =>
-  await httpClient.get(`/parkOfficers/${parkOfficerID}/protocols`);
+export const getAllProtocolsByOfficerID = (parkOfficerID, limit = 5, offset = 0) =>
+  httpClient.get(`/parkOfficers/${parkOfficerID}/protocols`, {
+    params: { limit, offset },
+  });
 
 export const deleteProtocolByID = async (parkOfficerID, protocolID) =>
   await httpClient.delete(

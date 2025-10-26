@@ -7,22 +7,32 @@ import {
 } from "../../redux/slices/protocolsSlice";
 import Protocol from "../../components/Protocol/Protocol";
 import NavBar from "../../components/NavBar/NavBar";
+import Pagination from "../../components/Pagination/Pagination";
 
 const ProtocolsPage = () => {
   const { parkOfficerID } = useParams();
-  const { protocols, isLoading, error } = useSelector(
+  const { protocols, total, isLoading, error } = useSelector(
     (state) => state.protocols
   );
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const protocolsPerPage = 5;
 
   useEffect(() => {
+    const offset = (currentPage - 1) * protocolsPerPage;
     if (parkOfficerID) {
-      dispatch(getAllProtocolsByOfficerID(parkOfficerID));
+      dispatch(
+        getAllProtocolsByOfficerID({
+          parkOfficerID,
+          limit: protocolsPerPage,
+          offset,
+        })
+      );
     } else {
-      dispatch(getAllProtocols());
+      dispatch(getAllProtocols({ limit: protocolsPerPage, offset }));
     }
-  }, [dispatch, parkOfficerID]);
+  }, [dispatch, currentPage, parkOfficerID]);
 
   if (isLoading) {
     return <div>LOADING</div>;
@@ -81,13 +91,20 @@ const ProtocolsPage = () => {
   const filteredProtocols = filterProtocols(protocols, searchValue);
 
   const protocolsCards = filteredProtocols.map((currentProtocol) => (
-    <Protocol key={currentProtocol.id} protocol={currentProtocol} />
+    <Protocol
+      key={currentProtocol.id}
+      protocol={currentProtocol}
+      currentPage={currentPage}
+      protocolsPerPage={protocolsPerPage}
+    />
   ));
 
   const officerFullName =
     parkOfficerID && protocols.length > 0
       ? protocols[0]?.parkOfficer?.full_name
       : null;
+
+  const totalPages = Math.ceil(total / protocolsPerPage);
   return (
     <>
       <NavBar />
@@ -106,6 +123,13 @@ const ProtocolsPage = () => {
           title="Search by fine (e.g., >50, <100, =75) or other criteria"
         />
         {protocolsCards}
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        )}
       </section>
     </>
   );

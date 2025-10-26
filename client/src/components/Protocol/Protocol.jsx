@@ -13,7 +13,7 @@ import styles from "./Protocol.module.scss";
 import { formatDateTime, timeAgo } from "../../utils/dateUtil";
 import DeleteConfirmation from "../Modals/DeleteConfirmation";
 
-const Protocol = ({ protocol }) => {
+const Protocol = ({ protocol, protocolsPerPage, currentPage }) => {
   const navigate = useNavigate();
   const [
     deleteProtocolConfirmationModalOpen,
@@ -52,8 +52,13 @@ const Protocol = ({ protocol }) => {
         protocolID: protocol.id,
       })
     );
-    setDeleteImageModalOpen(false);
-    await dispatch(getAllProtocolsByOfficerID(protocol.officerId));
+    await dispatch(
+      getAllProtocolsByOfficerID({
+        parkOfficerID: protocol.officerId,
+        limit: protocolsPerPage,
+        offset: (currentPage - 1) * protocolsPerPage,
+      })
+    );
   };
 
   const deleteImageHandler = async () => {
@@ -63,7 +68,14 @@ const Protocol = ({ protocol }) => {
         imageID: protocol.images[currentSlide].id,
       })
     );
-    await dispatch(getAllProtocolsByOfficerID(protocol.officerId));
+    setDeleteImageModalOpen(false);
+    await dispatch(
+      getAllProtocolsByOfficerID({
+        parkOfficerID: protocol.officerId,
+        limit: protocolsPerPage,
+        offset: (currentPage - 1) * protocolsPerPage,
+      })
+    );
   };
 
   return (

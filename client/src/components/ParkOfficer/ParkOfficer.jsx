@@ -5,14 +5,12 @@ import {
   deleteParkOfficer,
   getParkOfficers,
   dismissParkOfficer,
-  restoreParkOfficer
+  restoreParkOfficer,
 } from "../../redux/slices/parkOfficersSlice";
 import DeleteConfirmation from "../Modals/DeleteConfirmation";
 import styles from "./ParkOfficer.module.scss";
-import UpdateParkOfficerForm from "../Forms/UpdateParkOfficerForm";
 
-
-const ParkOfficer = ({ parkOfficer }) => {
+const ParkOfficer = ({ parkOfficer, currentPage, officersPerPage }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -25,17 +23,32 @@ const ParkOfficer = ({ parkOfficer }) => {
 
   const handleDelete = async () => {
     await dispatch(deleteParkOfficer(parkOfficer.id));
-    await dispatch(getParkOfficers());
+    await dispatch(
+      getParkOfficers({
+        limit: officersPerPage,
+        offset: (currentPage - 1) * officersPerPage,
+      })
+    );
   };
 
   const handleDismiss = async () => {
     await dispatch(dismissParkOfficer(parkOfficer.id));
-    await dispatch(getParkOfficers());
+    await dispatch(
+      getParkOfficers({
+        limit: officersPerPage,
+        offset: (currentPage - 1) * officersPerPage,
+      })
+    );
   };
 
-   const handleRestore = async () => {
+  const handleRestore = async () => {
     await dispatch(restoreParkOfficer(parkOfficer.id));
-    await dispatch(getParkOfficers());
+    await dispatch(
+      getParkOfficers({
+        limit: officersPerPage,
+        offset: (currentPage - 1) * officersPerPage,
+      })
+    );
   };
 
   const handleViewProtocols = () => {
@@ -72,8 +85,11 @@ const ParkOfficer = ({ parkOfficer }) => {
       )}
 
       <button onClick={handleEditParkOfficer}>Edit</button>
-      {parkOfficer.isWorked ? <button onClick={handleDismiss}>Dismiss</button> : <button onClick={handleRestore}>Restore</button>}
-
+      {parkOfficer.isWorked ? (
+        <button onClick={handleDismiss}>Dismiss</button>
+      ) : (
+        <button onClick={handleRestore}>Restore</button>
+      )}
     </article>
   );
 };
