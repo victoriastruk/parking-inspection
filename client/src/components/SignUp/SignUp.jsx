@@ -4,12 +4,15 @@ import { signUpValidationSchema } from "../../schemas/signUpValidationSchema";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../redux/slices/userSlice";
+
+import styles from "./SignUp.module.scss";
+
 const initialValues = {
   nickname: "",
   email: "",
   password: "",
 };
-const SignUp = () => {
+const SignUp = ({ onToggle }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,57 +20,74 @@ const SignUp = () => {
     const response = await dispatch(registerUser(values));
     resetForm();
 
-  if (response.meta.requestStatus === "fulfilled") {
-    navigate("/officers");
-  } else {
-    console.error("Login failed", response.payload);
-  }
+    if (response.meta.requestStatus === "fulfilled") {
+      navigate("/officers");
+    } else {
+      console.error("Login failed", response.payload);
+    }
   };
   return (
-    <>
-      <h2>Sign up</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Sign up</h2>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmitSignUp}
         validationSchema={signUpValidationSchema}
       >
         {() => (
-          <Form>
-            <label>
-              Nickname:
-              <Field
-                name="nickname"
-                autoComplete="off"
-                placeholder="superUser123"
-              />
-              <ErrorMessage name="nickname" component="div" />
-            </label>
+          <Form className={styles.form}>
+            <Field
+              name="nickname"
+              autoComplete="off"
+              placeholder="Enter your nickname"
+            />
+            <ErrorMessage
+              className={styles.error}
+              name="nickname"
+              component="div"
+            />
 
-            <label>
-              Email:
-              <Field
-                name="email"
-                autoComplete="off"
-                placeholder="superUser@test.com"
-              />
-              <ErrorMessage name="email" component="div" />
-            </label>
+            <Field
+              name="email"
+              autoComplete="off"
+              placeholder="Enter your email"
+            />
+            <ErrorMessage
+              className={styles.error}
+              name="email"
+              component="div"
+            />
 
-            <label>
-              Password:
-              <Field
-                name="password"
-                type="password"
-                autoComplete="off"
-                placeholder="gr3at@3wdsG"
-              />
-              <ErrorMessage name="password" component="div" />
-            </label>
-            <button type="submit">Registration</button>
+            <Field
+              name="password"
+              type="password"
+              autoComplete="off"
+              placeholder="Enter your password"
+            />
+            <ErrorMessage
+              className={styles.error}
+              name="password"
+              component="div"
+            />
+
+            <button className={styles.button} type="submit">
+              Registration
+            </button>
+
+            <p className={styles.switchText}>
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={onToggle}
+                className={styles.linkBtn}
+              >
+                Sign In
+              </button>
+            </p>
           </Form>
         )}
       </Formik>
-    </>
+    </div>
   );
 };
 
