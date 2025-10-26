@@ -5,6 +5,7 @@ import {
   deleteParkOfficer,
   getParkOfficers,
   dismissParkOfficer,
+  restoreParkOfficer
 } from "../../redux/slices/parkOfficersSlice";
 import DeleteConfirmation from "../Modals/DeleteConfirmation";
 import styles from "./ParkOfficer.module.scss";
@@ -29,6 +30,11 @@ const ParkOfficer = ({ parkOfficer }) => {
 
   const handleDismiss = async () => {
     await dispatch(dismissParkOfficer(parkOfficer.id));
+    await dispatch(getParkOfficers());
+  };
+
+   const handleRestore = async () => {
+    await dispatch(restoreParkOfficer(parkOfficer.id));
     await dispatch(getParkOfficers());
   };
 
@@ -66,7 +72,8 @@ const ParkOfficer = ({ parkOfficer }) => {
       )}
 
       <button onClick={handleEditParkOfficer}>Edit</button>
-      {parkOfficer.isWorked && <button onClick={handleDismiss}>Dismiss</button>}
+      {parkOfficer.isWorked ? <button onClick={handleDismiss}>Dismiss</button> : <button onClick={handleRestore}>Restore</button>}
+
     </article>
   );
 };

@@ -40,6 +40,17 @@ const dismissParkOfficer = createAsyncThunk(
   }
 );
 
+const restoreParkOfficer = createAsyncThunk(
+  `${SLICE_NAME}/restoreParkOfficer`,
+  async (parkOfficerID, thunkAPI) => {
+    try {
+      await API.restoreParkOfficer(parkOfficerID);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const addParkOfficer = createAsyncThunk(
   `${SLICE_NAME}/addParkOfficer`,
   async (parkOfficer, thunkAPI) => {
@@ -113,6 +124,22 @@ const parkOfficerSlice = createSlice({
       state.error = action.payload;
       toast.error(action.payload?.message || "Failed to dismiss officer");
     });
+
+    builder.addCase(restoreParkOfficer.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(restoreParkOfficer.fulfilled, (state) => {
+      state.isLoading = false;
+      state.error = null;
+      toast.success("Officer successfully restored");
+    });
+    builder.addCase(restoreParkOfficer.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to restore officer");
+    });
+
     builder.addCase(addParkOfficer.pending, (state) => {
       state.isLoading = true;
       state.error = null;
@@ -150,6 +177,7 @@ export {
   getParkOfficers,
   deleteParkOfficer,
   dismissParkOfficer,
+  restoreParkOfficer,
   addParkOfficer,
   updateParkOfficer,
 };
