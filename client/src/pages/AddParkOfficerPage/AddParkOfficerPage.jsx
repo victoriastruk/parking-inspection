@@ -1,7 +1,7 @@
 import React from 'react'
 import AddParkOfficerForm from '../../components/Forms/AddParkOfficerForm'
 
-const AddParkOfficer = () => {
+const AddParkOfficerPage = () => {
   return (
     <div>
        <h2>Add officer</h2>
@@ -10,4 +10,4 @@ const AddParkOfficer = () => {
   )
 }
 
-export default AddParkOfficer
+export default AddParkOfficerPage

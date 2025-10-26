@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateProtocolForm from '../../components/Forms/CreateProtocolForm'
 
-const CreateProtocol = () => {
+const CreateProtocolPage = () => {
   return (
     <div>
        <h2>Create Protocol</h2>
@@ -10,4 +10,4 @@ const CreateProtocol = () => {
   )
 }
 
-export default CreateProtocol
+export default CreateProtocolPage

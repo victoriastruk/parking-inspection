@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import {
   deleteProtocolByID,
@@ -11,10 +12,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./Protocol.module.scss";
 import { formatDateTime, timeAgo } from "../../utils/dateUtil";
-import UpdateProtocol from "../Modals/UpdateProtocol";
 import DeleteConfirmation from "../Modals/DeleteConfirmation";
 
 const Protocol = ({ protocol }) => {
+  const navigate = useNavigate();
   const [
     deleteProtocolConfirmationModalOpen,
     setDeleteProtocolConfirmationModalOpen,
@@ -22,8 +23,6 @@ const Protocol = ({ protocol }) => {
   const [addImagesModalOpen, setAddImagesModalOpen] = useState(false);
   const [deleteImageModalOpen, setDeleteImageModalOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -39,6 +38,11 @@ const Protocol = ({ protocol }) => {
       setCurrentSlide(currentImageIndex);
     },
   };
+
+  const handleUpdateProtocol = () => {
+    navigate(`/protocol/edit/${protocol.id}`);
+  };
+
   const handleDelete = async () => {
     await dispatch(
       deleteProtocolByID({
@@ -79,16 +83,9 @@ const Protocol = ({ protocol }) => {
       <p>Officer full name: {protocol.parkOfficer.full_name}</p>
       <p>Officer badge number: {protocol.parkOfficer.badge_number}</p>
 
-      <button type="button" onClick={() => setUpdateModalOpen(true)}>
+      <button type="button" onClick={handleUpdateProtocol}>
         Edit
       </button>
-      {updateModalOpen && (
-        <UpdateProtocol
-          open={updateModalOpen}
-          setIsOpen={setUpdateModalOpen}
-          protocol={protocol}
-        />
-      )}
 
       <button onClick={() => setDeleteProtocolConfirmationModalOpen(true)}>
         Delete

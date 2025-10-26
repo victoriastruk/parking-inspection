@@ -8,13 +8,13 @@ import HomePage from "./pages/HomePage/HomePage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useErrorToast from "./hooks/useErrorToast";
-import CreateProtocol from "./pages/CreateProtocol/CreateProtocol";
-import AddParkOfficer from "./pages/AddParkOfficer/AddParkOfficer";
-import UpdateParkOfficer from "./pages/UpdateParkOfficer/UpdateParkOfficer";
-import UpdateProtocol from "./pages/UpdateProtocol/UpdateProtocol"; 
+import CreateProtocolPage from "./pages/CreateProtocolPage/CreateProtocolPage";
+import AddParkOfficerPage from "./pages/AddParkOfficerPage/AddParkOfficerPage";
+import UpdateParkOfficerPage from "./pages/UpdateParkOfficerPage/UpdateParkOfficerPage";
+import UpdateProtocolPage from "./pages/UpdateProtocolPage/UpdateProtocolPage";
 
 function App() {
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -42,11 +42,20 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/officers" element={<ParkOfficersPage />} />
-        <Route path="/officers/add" element={<AddParkOfficer />} />
-        <Route path="/officers/edit/:parkOfficerID" element={<UpdateParkOfficer />} />
+        <Route path="/officers/add" element={<AddParkOfficerPage />} />
+        <Route
+          path="/officers/edit/:parkOfficerID"
+          element={<UpdateParkOfficerPage />}
+        />
         <Route path="/protocols" element={<ProtocolsPage />} />
-        <Route path="/protocols/create/:parkOfficerID" element={<CreateProtocol />} />
-        <Route path="/protocol/edit/:protocolID" element={<UpdateProtocol />} />
+        <Route
+          path="/protocols/create/:parkOfficerID"
+          element={<CreateProtocolPage />}
+        />
+        <Route
+          path="/protocol/edit/:protocolID"
+          element={<UpdateProtocolPage />}
+        />
         <Route path="/protocols/:parkOfficerID" element={<ProtocolsPage />} />
       </Routes>
     </BrowserRouter>

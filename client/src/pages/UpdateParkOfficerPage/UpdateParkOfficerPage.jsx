@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getParkOfficers } from "../../redux/slices/parkOfficersSlice";
 import UpdateParkOfficerForm from "../../components/Forms/UpdateParkOfficerForm";
 
-const UpdateParkOfficer = () => {
+const UpdateParkOfficerPage = () => {
   const { parkOfficerID } = useParams();
   const dispatch = useDispatch();
 
@@ -31,4 +31,4 @@ const UpdateParkOfficer = () => {
   );
 };
 
-export default UpdateParkOfficer;
+export default UpdateParkOfficerPage;
