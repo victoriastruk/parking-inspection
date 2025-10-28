@@ -1,5 +1,6 @@
 const { Image } = require("../models");
 const createHttpError = require("http-errors");
+const { deleteImageFromDisk } = require("../utils");
 
 module.exports.getProtocolImages = async (req, res, next) => {
   try {
@@ -57,14 +58,17 @@ module.exports.deleteImageByID = async (req, res, next) => {
     const {
       params: { protocolId, imageId },
     } = req;
-    const count = await Image.destroy({
+    const image = await Image.findOne({
       where: { protocolId, id: imageId },
     });
 
-    if (count === 0) {
+    if (!image) {
       return next(createHttpError(404, "Image not found"));
     }
-    
+
+    await deleteImageFromDisk(image.path);
+    await image.destroy();
+
     return res.status(204).end();
   } catch (error) {
     next(error);

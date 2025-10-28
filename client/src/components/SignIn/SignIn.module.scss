@@ -1,0 +1,135 @@
+.container {
+   margin: 0 auto;
+   min-height: 100dvh;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   max-width: 560px;
+   width: 100%;
+   padding: 0 16px;
+   flex: 1;
+   box-sizing: border-box;
+}
+
+.form {
+   display: flex;
+   flex-direction: column;
+   align-items: stretch;
+   padding: 20px;
+   gap: 17px;
+   max-width: 450px;
+   width: 100%;
+}
+.title {
+   color: #378a84;
+   font-size: 30px;
+   font-weight: 900;
+}
+
+.button {
+   background: linear-gradient(0deg, rgba(105, 174, 169, 1) 0%, rgba(63, 135, 130, 1) 100%);
+   color: white;
+   padding: 20px;
+   font-weight: 600;
+   font-size: 18px;
+   border: none;
+   border-radius: 8px;
+   transition: all 0.3s ease;
+   box-shadow: 0 4px 8px rgba(63, 135, 130, 0.2);
+   width: 100%;
+}
+
+.button:hover {
+   box-shadow:
+      0 8px 16px rgba(63, 135, 130, 0.3),
+      0 4px 6px rgba(105, 174, 169, 0.2);
+}
+
+input {
+   padding: 20px;
+   background: #f7f8f9;
+   outline: none;
+   border: 1px solid #e8ecf4;
+   border-radius: 8px;
+   width: 100%;
+   box-sizing: border-box;
+}
+
+input::placeholder {
+   color: #8391a1;
+   font-weight: 500;
+   font-size: 15px;
+}
+
+label {
+   color: #6a707c;
+   font-weight: 600;
+   font-size: 16px;
+}
+
+.error {
+   color: #f95b51;
+   padding-left: 10px;
+}
+.switchText {
+   color: #1e232c;
+   font-size: 15px;
+   text-align: center;
+}
+
+.linkBtn {
+   background: none;
+   border: none;
+   color: #378a84;
+   font-weight: 600;
+   cursor: pointer;
+   transition: color 0.3s ease;
+}
+
+.linkBtn:hover {
+   color: #2b6d68;
+}
+
+@media (max-width: 768px) {
+   .container {
+      padding: 60px 16px;
+      min-height: 100dvh;
+   }
+
+   .form {
+      padding: 20px;
+      max-width: 400px;
+   }
+
+   .switchText {
+      font-size: 14px;
+   }
+}
+
+@media (max-width: 480px) {
+   .container {
+      padding: 40px 12px;
+      min-height: 100dvh;
+   }
+
+   .form {
+      padding: 16px;
+      max-width: 100%;
+      gap: 14px;
+   }
+
+   .switchText {
+      font-size: 13.5px;
+   }
+
+   input {
+      padding: 14px;
+      font-size: 14px;
+   }
+
+   .button {
+      padding: 14px 0;
+      font-size: 15px;
+   }
+}

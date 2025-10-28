@@ -11,7 +11,9 @@ const { deleteImageFromDisk } = require("../utils");
 module.exports.getAllProtocols = async (req, res, next) => {
   try {
     const { pagination } = req;
-    const protocols = await Protocol.findAll({
+    const { limit, offset } = pagination;
+
+    const { rows: protocols, count: total } = await Protocol.findAndCountAll({
       include: [
         {
           model: ParkOfficer,
@@ -25,14 +27,15 @@ module.exports.getAllProtocols = async (req, res, next) => {
         },
       ],
       order: [["updated_at", "DESC"]],
-      ...pagination,
+      limit,
+      offset,
     });
 
     if (!protocols.length) {
       return next(createHttpError(404, "Protocols not found"));
     }
 
-    return res.status(200).send({ data: protocols });
+    return res.status(200).send({ data: protocols, total });
   } catch (error) {
     next(error);
   }
@@ -44,7 +47,9 @@ module.exports.getAllProtocolsByOfficerID = async (req, res, next) => {
       params: { officerId },
       pagination,
     } = req;
-    const protocols = await Protocol.findAll({
+    const { limit, offset } = pagination;
+
+    const { rows: protocols, count: total } = await Protocol.findAndCountAll({
       where: {
         officerId,
       },
@@ -61,13 +66,14 @@ module.exports.getAllProtocolsByOfficerID = async (req, res, next) => {
         },
       ],
       order: [["updated_at", "DESC"]],
-      ...pagination,
+      limit,
+      offset,
     });
 
     if (!protocols.length) {
       return next(createHttpError(404, "Protocols not found"));
     }
-    return res.status(200).send({ data: protocols });
+    return res.status(200).send({ data: protocols, total });
   } catch (error) {
     next(error);
   }

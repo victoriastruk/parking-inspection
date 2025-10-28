@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import {
   deleteProtocolByID,
@@ -6,23 +7,20 @@ import {
   deleteProtocolImageByID,
 } from "../../redux/slices/protocolsSlice";
 import { useDispatch } from "react-redux";
-import AddImage from "../Modals/AddImage";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./Protocol.module.scss";
 import { formatDateTime, timeAgo } from "../../utils/dateUtil";
-import DeleteProtocolConfirmation from "../Modals/DeleteProtocolConfirmation";
-import UpdateProtocol from "../Modals/UpdateProtocol";
+import DeleteConfirmation from "../Modals/DeleteConfirmation";
 
-const Protocol = ({ protocol }) => {
+const Protocol = ({ protocol, protocolsPerPage, currentPage }) => {
+  const navigate = useNavigate();
   const [
     deleteProtocolConfirmationModalOpen,
     setDeleteProtocolConfirmationModalOpen,
   ] = useState(false);
-  const [addImagesModalOpen, setAddImagesModalOpen] = useState(false);
+  const [deleteImageModalOpen, setDeleteImageModalOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -38,6 +36,15 @@ const Protocol = ({ protocol }) => {
       setCurrentSlide(currentImageIndex);
     },
   };
+
+  const handleAddImages = () => {
+    navigate(`/protocol/add-images/${protocol.id}`);
+  };
+
+  const handleUpdateProtocol = () => {
+    navigate(`/protocol/edit/${protocol.id}`);
+  };
+
   const handleDelete = async () => {
     await dispatch(
       deleteProtocolByID({
@@ -45,7 +52,13 @@ const Protocol = ({ protocol }) => {
         protocolID: protocol.id,
       })
     );
-    await dispatch(getAllProtocolsByOfficerID(protocol.officerId));
+    await dispatch(
+      getAllProtocolsByOfficerID({
+        parkOfficerID: protocol.officerId,
+        limit: protocolsPerPage,
+        offset: (currentPage - 1) * protocolsPerPage,
+      })
+    );
   };
 
   const deleteImageHandler = async () => {
@@ -55,7 +68,14 @@ const Protocol = ({ protocol }) => {
         imageID: protocol.images[currentSlide].id,
       })
     );
-    await dispatch(getAllProtocolsByOfficerID(protocol.officerId));
+    setDeleteImageModalOpen(false);
+    await dispatch(
+      getAllProtocolsByOfficerID({
+        parkOfficerID: protocol.officerId,
+        limit: protocolsPerPage,
+        offset: (currentPage - 1) * protocolsPerPage,
+      })
+    );
   };
 
   return (
@@ -77,45 +97,27 @@ const Protocol = ({ protocol }) => {
       <p>Officer full name: {protocol.parkOfficer.full_name}</p>
       <p>Officer badge number: {protocol.parkOfficer.badge_number}</p>
 
-      <button type="button" onClick={() => setUpdateModalOpen(true)}>
+      <button type="button" onClick={handleUpdateProtocol}>
         Edit
-      </button>
-      {updateModalOpen && (
-        <UpdateProtocol
-          open={updateModalOpen}
-          setIsOpen={setUpdateModalOpen}
-          protocol={protocol}
-        />
-      )}
-      <button type="button" onClick={handleDelete}>
-        Delete
       </button>
 
       <button onClick={() => setDeleteProtocolConfirmationModalOpen(true)}>
         Delete
       </button>
+
       {deleteProtocolConfirmationModalOpen && (
-        <DeleteProtocolConfirmation
+        <DeleteConfirmation
           open={deleteProtocolConfirmationModalOpen}
           setIsOpen={setDeleteProtocolConfirmationModalOpen}
-          protocolNumber={protocol.id}
+          title="Delete protocol"
+          message={`Are you sure you want to delete Protocol № ${protocol.id}?`}
           deleteCallback={handleDelete}
         />
       )}
 
-      <button type="button" onClick={() => setAddImagesModalOpen(true)}>
+      <button type="button" onClick={handleAddImages}>
         Add image(s)
       </button>
-      {addImagesModalOpen && (
-        <AddImage
-          open={addImagesModalOpen}
-          setIsOpen={setAddImagesModalOpen}
-          protocolID={protocol.id}
-          onUpdate={() =>
-            dispatch(getAllProtocolsByOfficerID(protocol.officerId))
-          }
-        />
-      )}
 
       {protocol.images.length > 0 && (
         <Slider {...settings} className={styles.slider}>
@@ -131,9 +133,19 @@ const Protocol = ({ protocol }) => {
       )}
 
       {protocol.images.length > 0 && (
-        <button onClick={deleteImageHandler}>
+        <button onClick={() => setDeleteImageModalOpen(true)}>
           Delete current image in the slide
         </button>
+      )}
+
+      {deleteImageModalOpen && (
+        <DeleteConfirmation
+          open={deleteImageModalOpen}
+          setIsOpen={setDeleteImageModalOpen}
+          title="Delete image"
+          message="Are you sure you want to delete this image?"
+          deleteCallback={deleteImageHandler}
+        />
       )}
     </article>
   );

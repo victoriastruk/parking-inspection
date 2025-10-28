@@ -8,11 +8,17 @@ const createHttpError = require("http-errors");
 
 module.exports.getAllParkOfficers = async (req, res, next) => {
   try {
-    const parkOfficers = await ParkOfficer.findAll({
-      order: [["created_at", "DESC"]],
-    });
+    const { pagination } = req;
+    const { limit, offset } = pagination;
 
-    return res.status(200).send({ data: parkOfficers });
+    const { rows: parkOfficers, count: total } =
+      await ParkOfficer.findAndCountAll({
+        order: [["created_at", "DESC"]],
+        limit,
+        offset,
+      });
+
+    return res.status(200).send({ data: parkOfficers, total });
   } catch (error) {
     next(error);
   }
@@ -102,6 +108,32 @@ module.exports.dismissParkOfficerByID = async (req, res, next) => {
     const [count, [updatedParkOfficer]] = await ParkOfficer.update(
       {
         isWorked: false,
+      },
+      {
+        where: { id },
+        returning: true,
+      }
+    );
+
+    if (count === 0) {
+      return next(createHttpError(404, "Park officer not found"));
+    }
+
+    return res.status(200).send({ data: updatedParkOfficer });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.restoreParkOfficerByID = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+
+    const [count, [updatedParkOfficer]] = await ParkOfficer.update(
+      {
+        isWorked: true,
       },
       {
         where: { id },

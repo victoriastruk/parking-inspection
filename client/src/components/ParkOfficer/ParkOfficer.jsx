@@ -5,33 +5,58 @@ import {
   deleteParkOfficer,
   getParkOfficers,
   dismissParkOfficer,
+  restoreParkOfficer,
 } from "../../redux/slices/parkOfficersSlice";
 import DeleteConfirmation from "../Modals/DeleteConfirmation";
-import UpdateParkOfficer from "../Modals/UpdateParkOfficer";
 import styles from "./ParkOfficer.module.scss";
-import CreateProtocol from "../Modals/CreateProtocol";
 
-const ParkOfficer = ({ parkOfficer }) => {
+const ParkOfficer = ({ parkOfficer, currentPage, officersPerPage }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [createProtocolModalOpen, setCreateProtocolModalOpen] = useState(false);
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
     useState(false);
-  const [updateParkOfficerOpen, setUpdateParkOfficerOpen] = useState(false);
-  const dispatch = useDispatch();
+
+  const handleEditParkOfficer = () => {
+    navigate(`/officers/edit/${parkOfficer.id}`);
+  };
 
   const handleDelete = async () => {
     await dispatch(deleteParkOfficer(parkOfficer.id));
-    await dispatch(getParkOfficers());
+    await dispatch(
+      getParkOfficers({
+        limit: officersPerPage,
+        offset: (currentPage - 1) * officersPerPage,
+      })
+    );
   };
 
   const handleDismiss = async () => {
     await dispatch(dismissParkOfficer(parkOfficer.id));
-    await dispatch(getParkOfficers());
+    await dispatch(
+      getParkOfficers({
+        limit: officersPerPage,
+        offset: (currentPage - 1) * officersPerPage,
+      })
+    );
+  };
+
+  const handleRestore = async () => {
+    await dispatch(restoreParkOfficer(parkOfficer.id));
+    await dispatch(
+      getParkOfficers({
+        limit: officersPerPage,
+        offset: (currentPage - 1) * officersPerPage,
+      })
+    );
   };
 
   const handleViewProtocols = () => {
     navigate(`/protocols/${parkOfficer.id}`);
+  };
+
+  const handleCreateProtocols = () => {
+    navigate(`/protocols/create/${parkOfficer.id}`);
   };
 
   return (
@@ -43,16 +68,7 @@ const ParkOfficer = ({ parkOfficer }) => {
 
       <button onClick={handleViewProtocols}>View protocols</button>
       {parkOfficer.isWorked && (
-        <button onClick={() => setCreateProtocolModalOpen(true)}>
-          Create protocol
-        </button>
-      )}
-      {createProtocolModalOpen && (
-        <CreateProtocol
-          open={createProtocolModalOpen}
-          setIsOpen={setCreateProtocolModalOpen}
-          officerId={parkOfficer.id}
-        />
+        <button onClick={handleCreateProtocols}>Create protocol</button>
       )}
 
       <button onClick={() => setDeleteConfirmationModalOpen(true)}>
@@ -62,21 +78,18 @@ const ParkOfficer = ({ parkOfficer }) => {
         <DeleteConfirmation
           open={deleteConfirmationModalOpen}
           setIsOpen={setDeleteConfirmationModalOpen}
-          officerFullName={parkOfficer.fullName}
+          title="Delete park officer"
+          message={`Are you sure you want to delete ${parkOfficer.fullName}?`}
           deleteCallback={handleDelete}
         />
       )}
 
-      <button onClick={() => setUpdateParkOfficerOpen(true)}>Edit</button>
-
-      {updateParkOfficerOpen && (
-        <UpdateParkOfficer
-          open={updateParkOfficerOpen}
-          setIsOpen={setUpdateParkOfficerOpen}
-          officer={parkOfficer}
-        />
+      <button onClick={handleEditParkOfficer}>Edit</button>
+      {parkOfficer.isWorked ? (
+        <button onClick={handleDismiss}>Dismiss</button>
+      ) : (
+        <button onClick={handleRestore}>Restore</button>
       )}
-      {parkOfficer.isWorked && <button onClick={handleDismiss}>Dismiss</button>}
     </article>
   );
 };

@@ -1,0 +1,30 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f7f8f9;
+}
+
+.formWrapper {
+  text-align: center;
+}
+
+.switchText {
+  margin-top: 20px;
+  color: #1E232C;
+  font-size: 15px;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  color: #378a84;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.linkBtn:hover {
+  color: #2b6d68;
+}

@@ -1,16 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import * as API from "../../API";
 
 const SLICE_NAME = "protocols";
 
 const getAllProtocols = createAsyncThunk(
   `${SLICE_NAME}/getAllProtocols`,
-  async (param, thunkAPI) => {
+  async ({ limit = 5, offset = 0 } = {}, thunkAPI) => {
     try {
       const {
-        data: { data: protocols },
-      } = await API.getAllProtocols();
-      return protocols;
+        data: { data: protocols, total },
+      } = await API.getAllProtocols(limit, offset);
+      return { protocols, total };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -18,13 +19,13 @@ const getAllProtocols = createAsyncThunk(
 );
 
 const getAllProtocolsByOfficerID = createAsyncThunk(
-  `${SLICE_NAME}/getAllProtocolsByOfficerID `,
-  async (parkOfficerID, thunkAPI) => {
+  `${SLICE_NAME}/getAllProtocolsByOfficerID`,
+  async ({ parkOfficerID, limit = 5, offset = 0 }, thunkAPI) => {
     try {
       const {
-        data: { data: protocols },
-      } = await API.getAllProtocolsByOfficerID(parkOfficerID);
-      return protocols;
+        data: { data: protocols, total },
+      } = await API.getAllProtocolsByOfficerID(parkOfficerID, limit, offset);
+      return { protocols, total };
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -88,6 +89,7 @@ const deleteProtocolImageByID = createAsyncThunk(
 
 const initialState = {
   protocols: [],
+  total: 0,
   isLoading: false,
   error: null,
 };
@@ -103,7 +105,8 @@ const protocolSlice = createSlice({
     builder.addCase(getAllProtocols.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
-      state.protocols = action.payload;
+      state.protocols = action.payload.protocols;
+      state.total = action.payload.total;
     });
     builder.addCase(getAllProtocols.rejected, (state, action) => {
       state.isLoading = false;
@@ -117,7 +120,8 @@ const protocolSlice = createSlice({
     builder.addCase(getAllProtocolsByOfficerID.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
-      state.protocols = action.payload;
+      state.protocols = action.payload.protocols;
+      state.total = action.payload.total;
     });
     builder.addCase(getAllProtocolsByOfficerID.rejected, (state, action) => {
       state.isLoading = false;
@@ -131,10 +135,12 @@ const protocolSlice = createSlice({
     builder.addCase(createProtocol.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Protocol successfuly created");
     });
     builder.addCase(createProtocol.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to create protocol");
     });
 
     builder.addCase(deleteProtocolByID.pending, (state) => {
@@ -144,10 +150,12 @@ const protocolSlice = createSlice({
     builder.addCase(deleteProtocolByID.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Protocol successfuly deleted");
     });
     builder.addCase(deleteProtocolByID.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to delete protocol");
     });
     builder.addCase(updateProtocol.pending, (state) => {
       state.isLoading = true;
@@ -156,10 +164,12 @@ const protocolSlice = createSlice({
     builder.addCase(updateProtocol.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Protocol successfuly updated");
     });
     builder.addCase(updateProtocol.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to update protocol");
     });
     builder.addCase(addImagesToProtocol.pending, (state) => {
       state.isLoading = true;
@@ -168,10 +178,12 @@ const protocolSlice = createSlice({
     builder.addCase(addImagesToProtocol.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Image(s) successfuly added");
     });
     builder.addCase(addImagesToProtocol.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to add images");
     });
     builder.addCase(deleteProtocolImageByID.pending, (state) => {
       state.isLoading = true;
@@ -180,10 +192,12 @@ const protocolSlice = createSlice({
     builder.addCase(deleteProtocolImageByID.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
+      toast.success("Image successfuly deleted");
     });
     builder.addCase(deleteProtocolImageByID.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+      toast.error(action.payload?.message || "Failed to delete image");
     });
   },
 });
