@@ -3,13 +3,16 @@ const { uploadImages } = require("../middleware/imagesUpload");
 const paginate = require("../middleware/paginate");
 const { checkToken } = require("../middleware/checkToken");
 const { checkAdmin } = require("../middleware/checkAdmin");
+const { checkBan } = require("../middleware/checkBan");
+
 const ProtocolController = require("../controllers/ProtocolController");
 
 protocolRouter
   .route("/")
-  .get(checkToken, paginate, ProtocolController.getAllProtocolsByOfficerID)
+  .get(checkToken, checkBan, paginate, ProtocolController.getAllProtocolsByOfficerID)
   .post(
     checkToken,
+    checkBan,
     checkAdmin,
     uploadImages,
     ProtocolController.createProtocol
@@ -19,10 +22,11 @@ protocolRouter
   .route("/:id")
   .put(
     checkToken,
+    checkBan,
     checkAdmin,
     uploadImages,
     ProtocolController.updateProtocolByID
   )
-  .delete(checkToken, checkAdmin, ProtocolController.deleteProtocolByID);
+  .delete(checkToken, checkBan, checkAdmin, ProtocolController.deleteProtocolByID);
 
 module.exports = protocolRouter;

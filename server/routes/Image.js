@@ -3,13 +3,16 @@ const imageRouter = require("express").Router({ mergeParams: true });
 const { uploadImages } = require("../middleware/imagesUpload");
 const { checkToken } = require("../middleware/checkToken");
 const { checkAdmin } = require("../middleware/checkAdmin");
+const { checkBan } = require("../middleware/checkBan");
+
 const ImageController = require("../controllers/ImageController");
 
 imageRouter
   .route("/")
-  .get(checkToken, ImageController.getProtocolImages)
+  .get(checkToken, checkBan, ImageController.getProtocolImages)
   .post(
     checkToken,
+    checkBan,
     checkAdmin,
     uploadImages,
     ImageController.addProtocolImages
@@ -17,7 +20,7 @@ imageRouter
 
 imageRouter
   .route("/:imageId")
-  .get(checkToken, ImageController.getImageByID)
-  .delete(checkToken, checkAdmin, ImageController.deleteImageByID);
+  .get(checkToken, checkBan, ImageController.getImageByID)
+  .delete(checkToken, checkBan, checkAdmin, ImageController.deleteImageByID);
 
 module.exports = imageRouter;
