@@ -4,7 +4,7 @@ const protocolRouter = require("./Protocol");
 
 const paginate = require("../middleware/paginate");
 const { checkToken } = require("../middleware/checkToken");
-
+const { checkAdmin } = require("../middleware/checkAdmin");
 const ParkOfficerController = require("../controllers/ParkOfficerController");
 const ProtocolController = require("../controllers/ProtocolController");
 
@@ -15,21 +15,21 @@ parkOfficerRouter
 parkOfficerRouter
   .route("/")
   .get(checkToken, paginate, ParkOfficerController.getAllParkOfficers)
-  .post(checkToken, ParkOfficerController.createParkOfficer);
+  .post(checkToken, checkAdmin, ParkOfficerController.createParkOfficer);
 
 parkOfficerRouter
   .route("/:id")
   .get(checkToken, ParkOfficerController.getParkOfficerByID)
-  .put(checkToken, ParkOfficerController.updateParkOfficerByID)
-  .delete(checkToken, ParkOfficerController.deleteParkOfficerByID);
+  .put(checkToken, checkAdmin, ParkOfficerController.updateParkOfficerByID)
+  .delete(checkToken, checkAdmin, ParkOfficerController.deleteParkOfficerByID);
 
 parkOfficerRouter
   .route("/:id/dismiss")
-  .put(checkToken, ParkOfficerController.dismissParkOfficerByID);
+  .put(checkToken, checkAdmin, ParkOfficerController.dismissParkOfficerByID);
 
 parkOfficerRouter
   .route("/:id/restore")
-  .put(checkToken, ParkOfficerController.restoreParkOfficerByID);
+  .put(checkToken, checkAdmin, ParkOfficerController.restoreParkOfficerByID);
 
 parkOfficerRouter.use("/:officerId/protocols", protocolRouter);
 
